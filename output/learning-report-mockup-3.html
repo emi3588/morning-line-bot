@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>学習レポート（見本3）</title>
+  <style>
+    :root {
+      --bg: #fdf2f7;
+      --bg-deep: #f8e8f0;
+      --card: #fffafc;
+      --ink: #3a2a32;
+      --muted: #8a6f7a;
+      --accent: #d4527a;
+      --accent-dark: #b83d62;
+      --accent-soft: rgba(212, 82, 122, 0.14);
+      --accent-border: rgba(212, 82, 122, 0.22);
+      --line: rgba(58, 42, 50, 0.08);
+      --shadow: 0 10px 32px rgba(184, 61, 98, 0.08);
+      --radius: 16px;
+      --font: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      font-family: var(--font);
+      color: var(--ink);
+      background: linear-gradient(168deg, #fff8fb 0%, var(--bg) 40%, var(--bg-deep) 100%);
+      -webkit-font-smoothing: antialiased;
+      padding: max(16px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+    }
+
+    .shell {
+      max-width: 390px;
+      margin: 0 auto;
+    }
+
+    /* --- 先頭だけ目立つサマリーカード --- */
+    .summary-hero {
+      background: linear-gradient(145deg, #fff 0%, #ffe8f1 42%, #ffd6e8 100%);
+      border-radius: 18px;
+      border: 2px solid rgba(212, 82, 122, 0.35);
+      box-shadow:
+        0 4px 0 rgba(184, 61, 98, 0.12),
+        0 20px 40px rgba(184, 61, 98, 0.14);
+      padding: 16px 14px 14px;
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .summary-hero::before {
+      content: "";
+      position: absolute;
+      top: -40%;
+      right: -20%;
+      width: 55%;
+      height: 120%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .summary-hero-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--accent-dark);
+      margin: 0 0 12px;
+      text-align: center;
+      position: relative;
+    }
+
+    .summary-hero .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    .summary-hero .stat-cell {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(212, 82, 122, 0.28);
+      border-radius: 12px;
+      padding: 12px 4px 10px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(184, 61, 98, 0.06);
+    }
+
+    .summary-hero .stat-num {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--accent-dark);
+      line-height: 1;
+      margin: 0 0 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .summary-hero .stat-label {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.2;
+      letter-spacing: 0.02em;
+    }
+
+    .summary-hero-comment {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.5;
+      margin: 0;
+      padding: 12px 14px;
+      text-align: center;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 12px;
+      border: 1px solid rgba(212, 82, 122, 0.2);
+      position: relative;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--accent-dark);
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid var(--accent-border);
+      padding: 6px 12px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 0 0 4px;
+      letter-spacing: 0.02em;
+      line-height: 1.35;
+    }
+
+    .sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .report-lead {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      padding: 14px 16px 12px;
+      margin-bottom: 12px;
+    }
+
+    .report-lead .meta {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .date-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .date-label {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .date-value {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-top: 2px;
+      color: var(--ink);
+    }
+
+    .date-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    section {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      padding: 14px 16px 16px;
+      margin-bottom: 12px;
+    }
+
+    section:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-dark);
+      letter-spacing: 0.04em;
+      margin: 0 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .label::before {
+      content: "";
+      width: 4px;
+      height: 14px;
+      border-radius: 2px;
+      background: var(--accent);
+      opacity: 0.85;
+    }
+
+    .body {
+      font-size: 14px;
+      line-height: 1.65;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .term-box {
+      background: linear-gradient(135deg, var(--accent-soft), rgba(255, 252, 252, 0.95));
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px dashed var(--accent-border);
+    }
+
+    .term-word {
+      font-weight: 600;
+      font-size: 15px;
+      margin: 0 0 6px;
+      color: var(--ink);
+    }
+
+    .term-def {
+      font-size: 13px;
+      line-height: 1.55;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 11px;
+      color: var(--muted);
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="summary-hero" role="region" aria-label="昨日のサマリー">
+      <p class="summary-hero-title">昨日のサマリー</p>
+      <div class="stat-row" aria-label="集計">
+        <div class="stat-cell">
+          <p class="stat-num">15</p>
+          <p class="stat-label">ドリル</p>
+        </div>
+        <div class="stat-cell">
+          <p class="stat-num">1</p>
+          <p class="stat-label">レッスン</p>
+        </div>
+        <div class="stat-cell">
+          <p class="stat-num">2</p>
+          <p class="stat-label">メモ</p>
+        </div>
+        <div class="stat-cell">
+          <p class="stat-num">1</p>
+          <p class="stat-label">用語</p>
+        </div>
+      </div>
+      <p class="summary-hero-comment">辞書の基礎は固まった。内包表記だけまだ不安。</p>
+    </div>
+
+    <header>
+      <span class="badge">モックアップ3 · 毎朝7:00 · LINE見本</span>
+      <h1>📚 昨日の学習レポート</h1>
+      <p class="sub">コミネコ風サマリー＋詳細</p>
+    </header>
+
+    <div class="report-lead" role="region" aria-label="対象期間">
+      <p class="meta">対象日: 2026/4/14（月）<br />配信: 2026/4/15（火）7:00</p>
+    </div>
+
+    <div class="date-card" role="group" aria-label="日付">
+      <div>
+        <div class="date-label">日付（レポート日）</div>
+        <div class="date-value">2026年4月15日（火）</div>
+      </div>
+      <div class="date-icon" aria-hidden="true">🌸</div>
+    </div>
+
+    <section aria-labelledby="sec-yesterday">
+      <p class="label" id="sec-yesterday">昨日の学習</p>
+      <p class="body">Pythonの辞書でキーと値の対応を練習。ドリル15問とレッスン1本。</p>
+    </section>
+
+    <section aria-labelledby="sec-understood">
+      <p class="label" id="sec-understood">理解できたこと</p>
+      <p class="body">`get()` で存在しないキーでもエラーにならずデフォルトを取れる。</p>
+    </section>
+
+    <section aria-labelledby="sec-vague">
+      <p class="label" id="sec-vague">まだ曖昧なこと</p>
+      <p class="body">辞書内包表記と、普通のループでの作り方の使い分け。</p>
+    </section>
+
+    <section aria-labelledby="sec-today">
+      <p class="label" id="sec-today">今日やる1つ</p>
+      <p class="body">内包表記で辞書を1つだけ自分で書いてから、同じものをループで書き直す。</p>
+    </section>
+
+    <section aria-labelledby="sec-term">
+      <p class="label" id="sec-term">今日の用語</p>
+      <div class="term-box">
+        <p class="term-word">辞書（dict）</p>
+        <p class="term-def">キーと値のペアをまとめて持つデータ。調べたい名前から値をすぐ取り出せる。</p>
+      </div>
+    </section>
+
+    <footer>見本3 · learning-report-mockup-3.html</footer>
+  </div>
+</body>
+</html>

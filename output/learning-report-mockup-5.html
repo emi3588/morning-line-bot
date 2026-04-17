@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>学習レポート（見本5）</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            accent: {
+              DEFAULT: "#c2410c",
+              soft: "#fff7ed",
+              border: "#fed7aa",
+              muted: "#9a3412",
+            },
+          },
+          fontFamily: {
+            sans: [
+              "Hiragino Sans",
+              "Hiragino Kaku Gothic ProN",
+              "Noto Sans JP",
+              "system-ui",
+              "sans-serif",
+            ],
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="min-h-dvh bg-stone-50 font-sans text-stone-800 antialiased pb-8 pt-[max(1rem,env(safe-area-inset-top))] px-4">
+  <div class="mx-auto max-w-[420px] space-y-4">
+    <header class="pt-1 text-center">
+      <p class="text-[11px] font-medium tracking-widest text-stone-500">学習ダッシュボード</p>
+      <h1 class="mt-1 text-lg font-semibold text-stone-900">今日のひと目</h1>
+    </header>
+
+    <!-- サマリーカード -->
+    <section
+      class="rounded-2xl border border-stone-100 bg-white p-5 shadow-sm shadow-stone-200/60"
+      aria-label="サマリー"
+    >
+      <div class="grid grid-cols-3 gap-3 border-b border-stone-100 pb-5">
+        <div class="text-center">
+          <p class="text-[10px] font-medium uppercase tracking-wide text-stone-500">連続日数</p>
+          <p class="mt-1 text-3xl font-bold tabular-nums tracking-tight text-accent">39</p>
+        </div>
+        <div class="text-center">
+          <p class="text-[10px] font-medium uppercase tracking-wide text-stone-500">完了レッスン数</p>
+          <p class="mt-1 text-3xl font-bold tabular-nums tracking-tight text-accent">58</p>
+        </div>
+        <div class="text-center">
+          <p class="text-[10px] font-medium uppercase tracking-wide text-stone-500">累計</p>
+          <p class="mt-1 text-3xl font-bold tabular-nums tracking-tight text-accent">231</p>
+        </div>
+      </div>
+
+      <div class="mt-4 grid grid-cols-2 gap-3">
+        <div class="rounded-xl border border-stone-100 bg-stone-50/80 p-3.5">
+          <p class="text-[10px] font-semibold tracking-wide text-stone-500">覚えた用語</p>
+          <p class="mt-1.5 text-sm font-semibold leading-snug text-stone-800">
+            githubflow、出国ゲート
+          </p>
+        </div>
+        <div
+          class="rounded-xl border border-accent-border bg-accent-soft p-3.5 ring-1 ring-orange-100/80"
+          aria-label="課題"
+        >
+          <p class="text-[10px] font-bold tracking-wide text-accent-muted">課題</p>
+          <p class="mt-1.5 text-base font-bold text-accent">hotfix</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 詳細カード -->
+    <div class="space-y-3">
+      <article class="flex gap-3 rounded-2xl border border-stone-100 bg-white p-4 shadow-sm shadow-stone-200/50">
+        <div class="w-1 min-h-[2.75rem] shrink-0 self-stretch rounded-full bg-accent" aria-hidden="true"></div>
+        <div class="min-w-0 flex-1">
+          <h2 class="text-[11px] font-bold uppercase tracking-wider text-accent">昨日の学習</h2>
+          <p class="mt-2 text-sm leading-relaxed text-stone-700">コミネコを見本にモックアップ作成</p>
+        </div>
+      </article>
+
+      <article class="flex gap-3 rounded-2xl border border-stone-100 bg-white p-4 shadow-sm shadow-stone-200/50">
+        <div class="w-1 min-h-[2.75rem] shrink-0 self-stretch rounded-full bg-accent" aria-hidden="true"></div>
+        <div class="min-w-0 flex-1">
+          <h2 class="text-[11px] font-bold uppercase tracking-wider text-accent">理解できたこと</h2>
+          <p class="mt-2 text-sm font-medium leading-relaxed text-stone-800">githubflow</p>
+        </div>
+      </article>
+
+      <article class="flex gap-3 rounded-2xl border border-stone-100 bg-white p-4 shadow-sm shadow-stone-200/50">
+        <div class="w-1 min-h-[2.75rem] shrink-0 self-stretch rounded-full bg-accent" aria-hidden="true"></div>
+        <div class="min-w-0 flex-1">
+          <h2 class="text-[11px] font-bold uppercase tracking-wider text-accent">まだ曖昧なこと</h2>
+          <p class="mt-2 text-sm font-medium leading-relaxed text-stone-800">hotfix</p>
+        </div>
+      </article>
+
+      <article class="flex gap-3 rounded-2xl border border-stone-100 bg-white p-4 shadow-sm shadow-stone-200/50">
+        <div class="w-1 min-h-[2.75rem] shrink-0 self-stretch rounded-full bg-accent" aria-hidden="true"></div>
+        <div class="min-w-0 flex-1">
+          <h2 class="text-[11px] font-bold uppercase tracking-wider text-accent">今日やる1つ</h2>
+          <p class="mt-2 text-sm font-semibold leading-relaxed text-stone-800">コミネコに近づける修正</p>
+        </div>
+      </article>
+
+      <article class="flex gap-3 rounded-2xl border border-stone-100 bg-white p-4 shadow-sm shadow-stone-200/50">
+        <div class="w-1 min-h-[2.75rem] shrink-0 self-stretch rounded-full bg-accent" aria-hidden="true"></div>
+        <div class="min-w-0 flex-1">
+          <h2 class="text-[11px] font-bold uppercase tracking-wider text-accent">今日の用語</h2>
+          <p class="mt-2 text-sm leading-relaxed text-stone-700">
+            githubflow＝出国ゲートのように main に戻る流れ
+          </p>
+        </div>
+      </article>
+    </div>
+
+    <p class="pt-2 text-center text-[10px] text-stone-400">見本5 · Tailwind CDN · learning-report-mockup-5.html</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>学習レポート（見本）</title>
+  <style>
+    :root {
+      --bg: #f6f3ef;
+      --card: #fffcfa;
+      --ink: #2c2825;
+      --muted: #6b6560;
+      --accent: #7a9e8f;
+      --accent-soft: rgba(122, 158, 143, 0.12);
+      --line: rgba(44, 40, 37, 0.08);
+      --shadow: 0 8px 28px rgba(44, 40, 37, 0.06);
+      --radius: 16px;
+      --font: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      font-family: var(--font);
+      color: var(--ink);
+      background: linear-gradient(165deg, #faf7f2 0%, var(--bg) 45%, #eef4f0 100%);
+      -webkit-font-smoothing: antialiased;
+      padding: max(16px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+    }
+
+    .shell {
+      max-width: 390px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid var(--line);
+      padding: 6px 12px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin: 0 0 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .date-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .date-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .date-value {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .date-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    section {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      padding: 14px 16px 16px;
+      margin-bottom: 12px;
+    }
+
+    section:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      margin: 0 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .label::before {
+      content: "";
+      width: 4px;
+      height: 14px;
+      border-radius: 2px;
+      background: var(--accent);
+      opacity: 0.75;
+    }
+
+    .body {
+      font-size: 14px;
+      line-height: 1.65;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .body.muted {
+      color: var(--muted);
+    }
+
+    .term-box {
+      background: linear-gradient(135deg, rgba(122, 158, 143, 0.08), rgba(255, 252, 250, 0.9));
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px dashed rgba(122, 158, 143, 0.35);
+    }
+
+    .term-word {
+      font-weight: 600;
+      font-size: 15px;
+      margin: 0 0 6px;
+      color: var(--ink);
+    }
+
+    .term-def {
+      font-size: 13px;
+      line-height: 1.55;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 11px;
+      color: var(--muted);
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <span class="badge">毎朝7:00 · LINE見本</span>
+      <h1>学習レポート</h1>
+      <p class="sub">昨日の1行を、今日の一歩に</p>
+    </header>
+
+    <div class="date-card" role="group" aria-label="日付">
+      <div>
+        <div class="date-label">日付</div>
+        <div class="date-value">2026年4月15日（水）</div>
+      </div>
+      <div class="date-icon" aria-hidden="true">📘</div>
+    </div>
+
+    <section aria-labelledby="sec-yesterday">
+      <p class="label" id="sec-yesterday">昨日の学習</p>
+      <p class="body">Pythonの辞書でキーと値の対応を練習。ドリル15問とレッスン1本。</p>
+    </section>
+
+    <section aria-labelledby="sec-understood">
+      <p class="label" id="sec-understood">理解できたこと</p>
+      <p class="body">`get()` で存在しないキーでもエラーにならずデフォルトを取れる。</p>
+    </section>
+
+    <section aria-labelledby="sec-vague">
+      <p class="label" id="sec-vague">まだ曖昧なこと</p>
+      <p class="body">辞書内包表記と、普通のループでの作り方の使い分け。</p>
+    </section>
+
+    <section aria-labelledby="sec-today">
+      <p class="label" id="sec-today">今日やる1つ</p>
+      <p class="body">内包表記で辞書を1つだけ自分で書いてから、同じものをループで書き直す。</p>
+    </section>
+
+    <section aria-labelledby="sec-term">
+      <p class="label" id="sec-term">今日の用語</p>
+      <div class="term-box">
+        <p class="term-word">辞書（dict）</p>
+        <p class="term-def">キーと値のペアをまとめて持つデータ。調べたい名前から値をすぐ取り出せる。</p>
+      </div>
+    </section>
+
+    <footer>見本 · 実際の自動化とは別のモックアップです</footer>
+  </div>
+</body>
+</html>
