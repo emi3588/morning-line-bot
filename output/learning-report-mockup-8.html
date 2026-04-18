@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>学習レポート（見本8）</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: [
+              "Hiragino Sans",
+              "Hiragino Kaku Gothic ProN",
+              "Noto Sans JP",
+              "system-ui",
+              "sans-serif",
+            ],
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body
+  class="min-h-dvh bg-gradient-to-b from-[#fff8fb] via-[#fdf2f7] to-[#f8e8f0] px-4 pb-8 pt-[max(1rem,env(safe-area-inset-top))] font-sans text-[#3a2a32] antialiased"
+>
+  <div class="mx-auto max-w-[390px] space-y-4">
+    <header class="text-center">
+      <h1 class="text-[1.05rem] font-semibold leading-snug tracking-wide text-[#3a2a32]">
+        昨日の学習サマリー
+      </h1>
+      <p class="mt-1.5 text-xs text-[#8a6f7a]">キラキラ学習日記 ✨</p>
+    </header>
+
+    <!-- サマリー：3×2 数字中心 -->
+    <section
+      class="relative overflow-hidden rounded-[18px] border-2 border-[#e8a4bc]/90 bg-gradient-to-br from-white via-[#fff0f6] to-[#ffd6e8] px-3.5 pb-3.5 pt-4 shadow-[0_4px_0_rgba(184,61,98,0.12),0_20px_40px_rgba(184,61,98,0.14)]"
+      aria-label="進捗サマリー"
+    >
+      <div
+        class="pointer-events-none absolute -right-[20%] -top-[40%] h-[120%] w-[55%] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.55)_0%,transparent_65%)]"
+        aria-hidden="true"
+      ></div>
+
+      <div class="relative grid grid-cols-3 gap-2">
+        <div
+          class="rounded-xl border border-[#e8a4bc]/45 bg-white/85 px-1.5 py-3 text-center shadow-sm shadow-rose-100/40"
+        >
+          <p class="text-[1.85rem] font-extrabold leading-none tracking-tight text-[#b83d62]">39</p>
+          <p class="mt-1.5 text-[9px] font-semibold leading-tight text-[#8a6f7a]">連続日数</p>
+        </div>
+        <div
+          class="rounded-xl border border-[#e8a4bc]/45 bg-white/85 px-1.5 py-3 text-center shadow-sm shadow-rose-100/40"
+        >
+          <p class="text-[1.85rem] font-extrabold leading-none tracking-tight text-[#b83d62]">12</p>
+          <p class="mt-1.5 text-[9px] font-semibold leading-tight text-[#8a6f7a]">完了コース数</p>
+        </div>
+        <div
+          class="rounded-xl border border-[#e8a4bc]/45 bg-white/85 px-1.5 py-3 text-center shadow-sm shadow-rose-100/40"
+        >
+          <p class="text-[1.85rem] font-extrabold leading-none tracking-tight text-[#b83d62]">58</p>
+          <p class="mt-1.5 text-[9px] font-semibold leading-tight text-[#8a6f7a]">完了レッスン数</p>
+        </div>
+        <div
+          class="rounded-xl border border-[#e8a4bc]/45 bg-white/85 px-1.5 py-3 text-center shadow-sm shadow-rose-100/40"
+        >
+          <p class="text-[1.85rem] font-extrabold leading-none tracking-tight text-[#b83d62]">24</p>
+          <p class="mt-1.5 text-[9px] font-semibold leading-tight text-[#8a6f7a]">週間累計</p>
+        </div>
+        <div
+          class="rounded-xl border border-[#e8a4bc]/45 bg-white/85 px-1.5 py-3 text-center shadow-sm shadow-rose-100/40"
+        >
+          <p class="text-[1.85rem] font-extrabold leading-none tracking-tight text-[#b83d62]">98</p>
+          <p class="mt-1.5 text-[9px] font-semibold leading-tight text-[#8a6f7a]">月間累計</p>
+        </div>
+        <div
+          class="rounded-xl border border-[#e8a4bc]/45 bg-white/85 px-1.5 py-3 text-center shadow-sm shadow-rose-100/40"
+        >
+          <p class="text-[1.85rem] font-extrabold leading-none tracking-tight text-[#b83d62]">231</p>
+          <p class="mt-1.5 text-[9px] font-semibold leading-tight text-[#8a6f7a]">累計</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 詳細カード -->
+    <div class="space-y-3">
+      <article
+        class="rounded-2xl border border-[rgba(58,42,50,0.08)] bg-[#fffafc] px-4 py-3.5 shadow-[0_10px_32px_rgba(184,61,98,0.08)]"
+      >
+        <h2 class="mb-2 flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[#b83d62]">
+          <span class="h-3.5 w-1 shrink-0 rounded-full bg-[#d4527a]" aria-hidden="true"></span>
+          昨日の学習
+        </h2>
+        <p class="text-sm leading-relaxed text-[#3a2a32]">コミネコを見本にモックアップ作成</p>
+      </article>
+
+      <article
+        class="rounded-2xl border border-[rgba(58,42,50,0.08)] bg-[#fffafc] px-4 py-3.5 shadow-[0_10px_32px_rgba(184,61,98,0.08)]"
+      >
+        <h2 class="mb-2 flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[#b83d62]">
+          <span class="h-3.5 w-1 shrink-0 rounded-full bg-[#d4527a]" aria-hidden="true"></span>
+          理解できたこと<span class="font-normal text-[#8a6f7a]">（覚えた用語）</span>
+        </h2>
+        <p class="text-sm font-medium leading-relaxed text-[#3a2a32]">githubflow</p>
+      </article>
+
+      <article
+        class="rounded-2xl border border-[rgba(58,42,50,0.08)] bg-[#fffafc] px-4 py-3.5 shadow-[0_10px_32px_rgba(184,61,98,0.08)]"
+      >
+        <h2 class="mb-2 flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[#b83d62]">
+          <span class="h-3.5 w-1 shrink-0 rounded-full bg-[#d4527a]" aria-hidden="true"></span>
+          まだ曖昧なこと<span class="font-normal text-[#8a6f7a]">（課題）</span>
+        </h2>
+        <p class="text-sm font-medium leading-relaxed text-[#3a2a32]">hotfix</p>
+      </article>
+
+      <article
+        class="rounded-2xl border border-[rgba(58,42,50,0.08)] bg-[#fffafc] px-4 py-3.5 shadow-[0_10px_32px_rgba(184,61,98,0.08)]"
+      >
+        <h2 class="mb-2 flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[#b83d62]">
+          <span class="h-3.5 w-1 shrink-0 rounded-full bg-[#d4527a]" aria-hidden="true"></span>
+          今日やる1つ
+        </h2>
+        <p class="text-sm font-semibold leading-relaxed text-[#3a2a32]">コミネコに近づける修正</p>
+      </article>
+
+      <article
+        class="rounded-2xl border border-[rgba(58,42,50,0.08)] bg-[#fffafc] px-4 py-3.5 shadow-[0_10px_32px_rgba(184,61,98,0.08)]"
+      >
+        <h2 class="mb-2 flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[#b83d62]">
+          <span class="h-3.5 w-1 shrink-0 rounded-full bg-[#d4527a]" aria-hidden="true"></span>
+          今日の用語
+        </h2>
+        <p class="text-sm leading-relaxed text-[#3a2a32]">
+          githubflow＝出国ゲートのように main に戻る流れ
+        </p>
+      </article>
+    </div>
+  </div>
+</body>
+</html>
