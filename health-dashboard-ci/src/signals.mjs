@@ -128,7 +128,7 @@ export function worstSignalOverall(signals) {
   return worst;
 }
 
-const LABELS = {
+export const SIGNAL_ITEM_LABELS = {
   sleepScore: '睡眠スコア',
   sleepHours: '睡眠時間',
   steps: '歩数',
@@ -143,9 +143,9 @@ const LABELS = {
 export function buildHeroMessage(signals) {
   const reds = [];
   const yellows = [];
-  for (const k of Object.keys(LABELS)) {
-    if (signals[k] === 'red') reds.push(LABELS[k]);
-    else if (signals[k] === 'yellow') yellows.push(LABELS[k]);
+  for (const k of Object.keys(SIGNAL_ITEM_LABELS)) {
+    if (signals[k] === 'red') reds.push(SIGNAL_ITEM_LABELS[k]);
+    else if (signals[k] === 'yellow') yellows.push(SIGNAL_ITEM_LABELS[k]);
   }
   const parts = [];
   if (reds.length) parts.push(reds.join('・') + 'が「赤」');

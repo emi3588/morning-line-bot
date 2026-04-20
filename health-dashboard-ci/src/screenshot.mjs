@@ -4,7 +4,7 @@ import { pathToFileURL } from 'url';
 import fs from 'fs';
 
 /**
- * 生成済み HTML を file:// で開き、PNG を保存
+ * 生成済み HTML を file:// で開き、PNG バッファを返す（保存は呼び出し側で行う）
  */
 export async function captureDashboardPng(htmlPath, pngPath) {
   const browser = await chromium.launch({ headless: true });
@@ -18,6 +18,7 @@ export async function captureDashboardPng(htmlPath, pngPath) {
   const dir = path.dirname(pngPath);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   const el = await page.locator('.container').first();
-  await el.screenshot({ path: pngPath, type: 'png' });
+  const buf = await el.screenshot({ type: 'png' });
   await browser.close();
+  return buf;
 }

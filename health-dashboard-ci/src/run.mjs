@@ -7,7 +7,7 @@ import { evaluateSignalsFromRow } from './signals.mjs';
 import { renderDashboardHtml } from './render.mjs';
 import { buildHints } from './hints.mjs';
 import { captureDashboardPng } from './screenshot.mjs';
-import { linePushPngBuffer } from './line.mjs';
+import { saveDashboardPngLocal, buildDashboardPushText, linePushDashboardText } from './line.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -33,11 +33,11 @@ async function main() {
   fs.writeFileSync(htmlPath, html, 'utf8');
 
   console.log('5) Playwright スクリーンショット…');
-  await captureDashboardPng(htmlPath, pngPath);
+  const pngBuffer = await captureDashboardPng(htmlPath, pngPath);
+  saveDashboardPngLocal(pngPath, pngBuffer);
 
-  console.log('6) LINE 送信（PNG を base64 data URL で image メッセージ）…');
-  const buf = fs.readFileSync(pngPath);
-  await linePushPngBuffer(buf);
+  console.log('6) LINE 送信（テキスト要約のみ）…');
+  await linePushDashboardText(buildDashboardPushText(row, signals, hints));
   console.log('完了');
 }
 
