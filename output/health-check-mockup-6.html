@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>健康チェックダッシュボード（mockup6）</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 10mm;
+      background-color: #eff6ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      color: #0f172a;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, #f0f9ff 0%, #fff1f2 100%);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 0 4px 24px;
+    }
+
+    /* ----- ヘッダー（見本：水色タイトル・丸み・影） ----- */
+    .page-header {
+      text-align: center;
+      padding: 22px 16px 18px;
+      margin-bottom: 18px;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(14, 116, 144, 0.12), 0 2px 6px rgba(15, 23, 42, 0.06);
+    }
+
+    .page-header .kicker {
+      margin: 0;
+      font-size: 9pt;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #64748b;
+    }
+
+    .page-header h1 {
+      margin: 8px 0 0;
+      font-size: 20pt;
+      font-weight: 800;
+      color: #0ea5e9;
+      letter-spacing: -0.02em;
+    }
+
+    .page-header .sub {
+      margin: 10px 0 0;
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .page-header .meta {
+      margin: 6px 0 0;
+      font-size: 9pt;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    /* ----- 信号の丸（単色・Tailwind 相当） ----- */
+    .lamp {
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
+    }
+
+    .lamp--green {
+      background-color: #22c55e;
+    }
+
+    .lamp--yellow {
+      background-color: #facc15;
+    }
+
+    .lamp--red {
+      background-color: #ef4444;
+    }
+
+    /* ----- 全体エリア：丸を mockup5 の約87% に、カード内余白を増やす ----- */
+    .hero {
+      padding: 26px 24px 28px;
+      margin-bottom: 20px;
+      text-align: center;
+      background: #ffffff;
+      border-radius: 22px;
+      border: 3px solid #fda4af;
+      box-shadow: 0 8px 26px rgba(244, 63, 94, 0.12), 0 2px 8px rgba(15, 23, 42, 0.06);
+    }
+
+    .hero-title {
+      margin: 0;
+      font-size: 11pt;
+      font-weight: 800;
+      color: #1e293b;
+    }
+
+    .hero-tag {
+      margin: 8px 0 0;
+      font-size: 9pt;
+      font-weight: 700;
+      color: #64748b;
+    }
+
+    /* 142px の 85〜90% → 124px（約 87%） */
+    .hero .lamp-hero {
+      width: 124px;
+      height: 124px;
+      margin: 22px auto 16px;
+    }
+
+    .hero-msg {
+      margin: 14px auto 0;
+      max-width: 400px;
+      font-size: 10pt;
+      line-height: 1.65;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    /* ----- 9マス ----- */
+    .grid-label {
+      margin: 0 0 10px 4px;
+      font-size: 9.5pt;
+      font-weight: 800;
+      color: #475569;
+    }
+
+    .grid-9 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .item-card {
+      padding: 14px 8px 12px;
+      text-align: center;
+      background: #ffffff;
+      border-radius: 22px;
+      border: none;
+      box-shadow:
+        0 6px 18px rgba(15, 23, 42, 0.1),
+        0 2px 4px rgba(15, 23, 42, 0.05);
+    }
+
+    .item-card .item-name {
+      margin: 0 0 8px;
+      font-size: 8.5pt;
+      font-weight: 800;
+      color: #475569;
+      letter-spacing: 0.02em;
+    }
+
+    .item-card .lamp-sm {
+      width: 55px;
+      height: 55px;
+      margin: 0 auto 10px;
+    }
+
+    .item-card .value {
+      margin: 0;
+      font-size: 20pt;
+      font-weight: 900;
+      line-height: 1.15;
+      color: #0f172a;
+      word-break: break-all;
+    }
+
+    .item-card .value.time {
+      font-size: 16pt;
+    }
+
+    .item-card .value.emoji {
+      font-size: 28pt;
+      line-height: 1.1;
+    }
+
+    .item-card .unit {
+      margin: 4px 0 0;
+      font-size: 7.5pt;
+      font-weight: 700;
+      color: #64748b;
+    }
+
+    /* ----- フッター ----- */
+    .footer {
+      margin-top: 18px;
+      padding: 18px 20px;
+      background: #ffffff;
+      border-radius: 20px;
+      border-left: 6px solid #0284c7;
+      box-shadow: 0 6px 20px rgba(14, 116, 144, 0.1), 0 2px 6px rgba(15, 23, 42, 0.05);
+    }
+
+    .footer h3 {
+      margin: 0 0 10px;
+      font-size: 11pt;
+      color: #075985;
+      font-weight: 900;
+    }
+
+    .footer p {
+      margin: 0;
+      font-size: 10pt;
+      line-height: 1.65;
+      color: #0f172a;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="page-header">
+      <p class="kicker">HEALTH CHECK</p>
+      <h1>健康見える化</h1>
+      <p class="sub">📊 デイリーヘルスダッシュボード</p>
+      <p class="meta">2026年4月18日（土）21:00 集計</p>
+    </header>
+
+    <section class="hero" aria-labelledby="hero-h">
+      <h2 id="hero-h" class="hero-title">💊 健康度（全体）</h2>
+      <p class="hero-tag">9項目のうちいちばん重い信号を表示</p>
+      <div class="lamp lamp--red lamp-hero" role="img" aria-label="全体の状態"></div>
+      <p class="hero-msg">
+        朝散歩が「赤」、睡眠時間が「黄」など、一部に課題があります。今夜は就寝を早め、明日の歩き方を整えましょう。
+      </p>
+    </section>
+
+    <p class="grid-label">9項目の内訳</p>
+    <div class="grid-9">
+      <article class="item-card">
+        <p class="item-name">睡眠スコア</p>
+        <div class="lamp lamp--green lamp-sm" aria-hidden="true"></div>
+        <p class="value">85</p>
+      </article>
+      <article class="item-card">
+        <p class="item-name">睡眠時間</p>
+        <div class="lamp lamp--yellow lamp-sm" aria-hidden="true"></div>
+        <p class="value">5.5</p>
+        <p class="unit">時間</p>
+      </article>
+      <article class="item-card">
+        <p class="item-name">歩数</p>
+        <div class="lamp lamp--green lamp-sm" aria-hidden="true"></div>
+        <p class="value">8240</p>
+        <p class="unit">歩</p>
+      </article>
+
+      <article class="item-card">
+        <p class="item-name">就寝</p>
+        <div class="lamp lamp--yellow lamp-sm" aria-hidden="true"></div>
+        <p class="value time">22:30</p>
+      </article>
+      <article class="item-card">
+        <p class="item-name">起床</p>
+        <div class="lamp lamp--green lamp-sm" aria-hidden="true"></div>
+        <p class="value time">4:50</p>
+      </article>
+      <article class="item-card">
+        <p class="item-name">気分</p>
+        <div class="lamp lamp--green lamp-sm" aria-hidden="true"></div>
+        <p class="value emoji">😊</p>
+      </article>
+
+      <article class="item-card">
+        <p class="item-name">便通</p>
+        <div class="lamp lamp--green lamp-sm" aria-hidden="true"></div>
+        <p class="value">〇</p>
+      </article>
+      <article class="item-card">
+        <p class="item-name">朝散歩</p>
+        <div class="lamp lamp--red lamp-sm" aria-hidden="true"></div>
+        <p class="value">×</p>
+      </article>
+      <article class="item-card">
+        <p class="item-name">ルームマシン</p>
+        <div class="lamp lamp--green lamp-sm" aria-hidden="true"></div>
+        <p class="value">〇</p>
+      </article>
+    </div>
+
+    <footer class="footer">
+      <h3>AI総合コメント</h3>
+      <p>
+        今日は早起きができていて素晴らしいね！朝散歩はできなかったけど、ルームマシンでしっかりカバーできているよ。今夜はあと30分早く寝ると、明日の睡眠スコアがさらに良くなりそうだよ。
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>健康チェック（mockup4 · 信号機UI）</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "system-ui", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="min-h-dvh bg-slate-100 px-3 py-6 font-sans text-slate-900 antialiased">
+  <div class="mx-auto max-w-[420px]">
+    <header class="mb-5 text-center">
+      <h1 class="text-lg font-extrabold tracking-tight">健康チェック</h1>
+      <p class="mt-1 text-xs font-semibold text-slate-500">2026年4月18日（土）21:00</p>
+    </header>
+
+    <!-- 全体：丸 → 数字（ラベルなし） -->
+    <section
+      class="mx-auto mb-6 flex max-w-[280px] flex-col items-center rounded-2xl bg-white px-5 py-6 shadow-md"
+      aria-label="全体"
+    >
+      <div class="h-40 w-40 shrink-0 rounded-full bg-red-500" aria-hidden="true"></div>
+      <p class="mt-4 text-4xl font-black tabular-nums tracking-tight">62</p>
+    </section>
+
+    <!-- 9マス：丸（最優先）→ 数字 -->
+    <div class="grid grid-cols-3 gap-3">
+      <div class="flex flex-col items-center rounded-2xl bg-white px-2 py-4 shadow-md">
+        <div class="h-36 w-36 shrink-0 rounded-full bg-green-500" aria-hidden="true"></div>
+        <p class="mt-3 text-3xl font-black tabular-nums">85</p>
+      </div>
+      <div class="flex flex-col items-center rounded-2xl bg-white px-2 py-4 shadow-md">
+        <div class="h-36 w-36 shrink-0 rounded-full bg-yellow-400" aria-hidden="true"></div>
+        <p class="mt-3 text-3xl font-black tabular-nums">5.5</p>
+      </div>
+      <div class="flex flex-col items-center rounded-2xl bg-white px-2 py-4 shadow-md">
+        <div class="h-36 w-36 shrink-0 rounded-full bg-green-500" aria-hidden="true"></div>
+        <p class="mt-3 text-2xl font-black tabular-nums">8240</p>
+      </div>
+
+      <div class="flex flex-col items-center rounded-2xl bg-white px-2 py-4 shadow-md">
+        <div class="h-36 w-36 shrink-0 rounded-full bg-yellow-400" aria-hidden="true"></div>
+        <p class="mt-3 text-2xl font-black tabular-nums">22:30</p>
+      </div>
+      <div class="flex flex-col items-center rounded-2xl bg-white px-2 py-4 shadow-md">
+        <div class="h-36 w-36 shrink-0 rounded-full bg-green-500" aria-hidden="true"></div>
+        <p class="mt-3 text-2xl font-black tabular-nums">4:50</p>
+      </div>
+      <div class="flex flex-col items-center rounded-2xl bg-white px-2 py-4 shadow-md">
+        <div class="h-36 w-36 shrink-0 rounded-full bg-green-500" aria-hidden="true"></div>
+        <p class="mt-3 text-3xl font-black tabular-nums">3</p>
+      </div>
+
+      <div class="flex flex-col items-center rounded-2xl bg-white px-2 py-4 shadow-md">
+        <div class="h-36 w-36 shrink-0 rounded-full bg-green-500" aria-hidden="true"></div>
+        <p class="mt-3 text-3xl font-black tabular-nums">1</p>
+      </div>
+      <div class="flex flex-col items-center rounded-2xl bg-white px-2 py-4 shadow-md">
+        <div class="h-36 w-36 shrink-0 rounded-full bg-red-500" aria-hidden="true"></div>
+        <p class="mt-3 text-3xl font-black tabular-nums">0</p>
+      </div>
+      <div class="flex flex-col items-center rounded-2xl bg-white px-2 py-4 shadow-md">
+        <div class="h-36 w-36 shrink-0 rounded-full bg-green-500" aria-hidden="true"></div>
+        <p class="mt-3 text-3xl font-black tabular-nums">1</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

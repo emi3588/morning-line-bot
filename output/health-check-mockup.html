@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>健康チェック・ダッシュボード（見本）</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: [
+              "Hiragino Sans",
+              "Hiragino Kaku Gothic ProN",
+              "Noto Sans JP",
+              "system-ui",
+              "sans-serif",
+            ],
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body
+  class="min-h-dvh bg-gradient-to-b from-sky-50 via-white to-rose-50/40 px-4 pb-10 pt-[max(1rem,env(safe-area-inset-top))] font-sans text-slate-800 antialiased"
+>
+  <div class="mx-auto max-w-[390px] space-y-5">
+    <!-- 進捗見本に寄せたヘッダー -->
+    <header class="text-center">
+      <h1 class="text-2xl font-bold tracking-tight text-sky-500 sm:text-[1.65rem]">健康見える化</h1>
+      <p class="mt-2 text-sm font-semibold text-slate-600">
+        <span aria-hidden="true">📊</span> デイリーヘルスダッシュボード
+      </p>
+      <p id="demo-updated" class="mt-1.5 text-xs text-slate-500"></p>
+    </header>
+
+    <!-- 全体：大きな信号機（進捗の「全体」ブロック相当） -->
+    <section id="hero" class="rounded-2xl border-2 border-rose-100 bg-white/95 p-5 shadow-md" aria-labelledby="hero-heading">
+      <h2 id="hero-heading" class="flex items-center justify-center gap-1.5 text-sm font-bold text-slate-700">
+        <span aria-hidden="true">💊</span> 健康度（全体）
+      </h2>
+      <p class="mt-1 text-center text-[11px] font-medium text-slate-400">各項目の信号をまとめたイメージ</p>
+      <div id="hero-inner" class="mt-4"></div>
+    </section>
+
+    <!-- 3×3：各カードにも信号の丸 -->
+    <div>
+      <p class="mb-2 text-center text-xs font-semibold text-slate-500">9項目の内訳</p>
+      <div
+        id="grid"
+        class="grid grid-cols-3 gap-2.5 sm:gap-3"
+        role="list"
+        aria-label="健康チェック9項目"
+      ></div>
+    </div>
+
+    <footer class="rounded-2xl border border-slate-200/80 bg-white/90 p-4 text-center shadow-sm">
+      <p class="text-[11px] leading-relaxed text-slate-500">
+        進捗ダッシュボード見本のように、<strong class="font-semibold text-slate-600">丸い信号</strong>で状態を表現しています。
+        データは <code class="rounded bg-slate-100 px-1 text-[10px]">MOCK</code> を編集してください。
+      </p>
+      <p class="mt-2 text-[10px] text-slate-400">見本 · Tailwind CDN · output/health-check-mockup.html</p>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      var MOCK = {
+        dateLabel: "2026年4月16日（木）",
+        updatedNote: "21:00 更新",
+        sleepScore: 82,
+        sleepHours: 7.25,
+        steps: 6234,
+        bedtime: "22:40",
+        wakeTime: "5:12",
+        mood: "😐",
+        bowel: "あり",
+        morningWalk: "なし",
+        roomMachine: "あり",
+      };
+
+      /** 信号の丸（進捗見本のランプ風） */
+      var LAMP_SHADOW =
+        "shadow-[inset_0_3px_10px_rgba(255,255,255,0.65),inset_0_-6px_14px_rgba(0,0,0,0.12),0_8px_24px_rgba(0,0,0,0.08)]";
+
+      var LAMP = {
+        good: {
+          sphere:
+            "bg-gradient-to-br from-emerald-300 via-emerald-400 to-emerald-600 ring-2 ring-emerald-200/90 " +
+            LAMP_SHADOW,
+          label: "text-emerald-700",
+          badge: "bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200/80",
+          word: "順調",
+        },
+        warn: {
+          sphere:
+            "bg-gradient-to-br from-amber-300 via-amber-400 to-amber-600 ring-2 ring-amber-200/90 " +
+            LAMP_SHADOW,
+          label: "text-amber-800",
+          badge: "bg-amber-50 text-amber-900 ring-1 ring-amber-200/80",
+          word: "注意",
+        },
+        bad: {
+          sphere:
+            "bg-gradient-to-br from-rose-300 via-rose-400 to-rose-600 ring-2 ring-rose-200/90 " +
+            LAMP_SHADOW,
+          label: "text-rose-700",
+          badge: "bg-rose-50 text-rose-800 ring-1 ring-rose-200/80",
+          word: "要改善",
+        },
+      };
+
+      var CARD_SHELL =
+        "flex min-h-[128px] flex-col items-center rounded-2xl border border-rose-100/90 bg-white/95 p-3 shadow-md";
+
+      function pad2(n) {
+        return (n < 10 ? "0" : "") + n;
+      }
+
+      function timeToMinutes(hhmm) {
+        var p = String(hhmm || "").split(":");
+        var h = parseInt(p[0], 10);
+        var m = parseInt(p[1], 10) || 0;
+        if (isNaN(h)) return null;
+        return h * 60 + m;
+      }
+
+      function tierBedtime(hhmm) {
+        var t = timeToMinutes(hhmm);
+        if (t === null) return "warn";
+        if (t <= 22 * 60) return "good";
+        if (t <= 23 * 60) return "warn";
+        return "bad";
+      }
+
+      function tierWake(hhmm) {
+        var t = timeToMinutes(hhmm);
+        if (t === null) return "warn";
+        if (t <= 4 * 60 + 59) return "good";
+        if (t <= 5 * 60 + 29) return "warn";
+        return "bad";
+      }
+
+      function tierMood(emoji) {
+        if (emoji === "😊") return "good";
+        if (emoji === "😐") return "warn";
+        if (emoji === "😞") return "bad";
+        return "warn";
+      }
+
+      function tierSleepScore(n) {
+        if (n >= 80) return "good";
+        if (n >= 60) return "warn";
+        return "bad";
+      }
+
+      function tierSleepHours(h) {
+        if (h >= 7 && h <= 9) return "good";
+        if ((h >= 6 && h < 7) || (h > 9 && h <= 10)) return "warn";
+        return "bad";
+      }
+
+      function tierSteps(n) {
+        if (n >= 8000) return "good";
+        if (n >= 5000) return "warn";
+        return "bad";
+      }
+
+      function formatSleepHours(h) {
+        var whole = Math.floor(h);
+        var frac = Math.round((h - whole) * 60);
+        return whole + "h" + pad2(frac);
+      }
+
+      function formatSteps(n) {
+        return n.toLocaleString("ja-JP");
+      }
+
+      function tierHabit(done) {
+        return done ? "good" : "bad";
+      }
+
+      function tierRank(t) {
+        if (t === "bad") return 2;
+        if (t === "warn") return 1;
+        return 0;
+      }
+
+      function worstTier(list) {
+        var w = "good";
+        list.forEach(function (t) {
+          if (tierRank(t) > tierRank(w)) w = t;
+        });
+        return w;
+      }
+
+      function overallMessage(tier) {
+        if (tier === "bad") return "赤信号の項目があります。生活リズムと行動を見直しましょう。";
+        if (tier === "warn") return "黄信号の項目があります。今日は無理せず整えていきましょう。";
+        return "緑が多く、全体としては良好です。この調子で続けましょう。";
+      }
+
+      function lampSphereHtml(tier, sizeClass) {
+        var L = LAMP[tier];
+        return (
+          '<div class="' +
+          sizeClass +
+          " shrink-0 rounded-full " +
+          L.sphere +
+          '" role="img" aria-label="' +
+          L.word +
+          '"></div>'
+        );
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function buildHero(overall) {
+        var L = LAMP[overall];
+        return (
+          '<div class="flex flex-col items-center">' +
+          lampSphereHtml(overall, "h-[5.5rem] w-[5.5rem]") +
+          '<p class="mt-3 text-lg font-bold ' +
+          L.label +
+          '">' +
+          L.word +
+          "</p>" +
+          '<p class="mt-2 max-w-[280px] text-center text-sm leading-relaxed text-slate-600">' +
+          escapeHtml(overallMessage(overall)) +
+          "</p>" +
+          "</div>"
+        );
+      }
+
+      function cardHtml(opts) {
+        var L = LAMP[opts.tier];
+        var isHabit = opts.kind === "habit";
+        var valueClass = isHabit
+          ? "text-2xl font-black tabular-nums " + L.label
+          : "text-2xl font-bold tabular-nums tracking-tight text-slate-800 sm:text-3xl";
+
+        var valueRow = "";
+        if (isHabit) {
+          var mark = opts.done ? "〇" : "×";
+          valueRow =
+            '<p class="mt-1 ' +
+            valueClass +
+            '">' +
+            mark +
+            "</p>" +
+            '<p class="text-[10px] font-semibold text-slate-500">' +
+            (opts.done ? "あり" : "なし") +
+            "</p>";
+        } else if (opts.valueHtml !== "") {
+          valueRow = '<p class="mt-1 break-all ' + valueClass + '">' + opts.valueHtml + "</p>";
+        }
+
+        return (
+          '<article role="listitem" class="' +
+          CARD_SHELL +
+          '">' +
+          '<h3 class="text-center text-[10px] font-bold tracking-wide text-slate-500">' +
+          escapeHtml(opts.title) +
+          "</h3>" +
+          lampSphereHtml(opts.tier, "mt-2 h-11 w-11") +
+          valueRow +
+          '<span class="mt-auto inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold ' +
+          L.badge +
+          '">' +
+          L.word +
+          "</span>" +
+          "</article>"
+        );
+      }
+
+      function collectRows(d) {
+        var rows = [];
+        rows.push({
+          title: "睡眠スコア",
+          valueHtml: escapeHtml(String(d.sleepScore)),
+          tier: tierSleepScore(d.sleepScore),
+          kind: "metric",
+        });
+        rows.push({
+          title: "睡眠時間",
+          valueHtml: escapeHtml(formatSleepHours(d.sleepHours)),
+          tier: tierSleepHours(d.sleepHours),
+          kind: "metric",
+        });
+        rows.push({
+          title: "歩数",
+          valueHtml: escapeHtml(formatSteps(d.steps)),
+          tier: tierSteps(d.steps),
+          kind: "metric",
+        });
+        rows.push({
+          title: "就寝",
+          valueHtml: escapeHtml(d.bedtime),
+          tier: tierBedtime(d.bedtime),
+          kind: "metric",
+        });
+        rows.push({
+          title: "起床",
+          valueHtml: escapeHtml(d.wakeTime),
+          tier: tierWake(d.wakeTime),
+          kind: "metric",
+        });
+        rows.push({
+          title: "気分",
+          valueHtml: escapeHtml(d.mood),
+          tier: tierMood(d.mood),
+          kind: "metric",
+        });
+        var b1 = d.bowel === "あり";
+        var b2 = d.morningWalk === "あり";
+        var b3 = d.roomMachine === "あり";
+        rows.push({ title: "便通", valueHtml: "", tier: tierHabit(b1), kind: "habit", done: b1 });
+        rows.push({ title: "朝散歩", valueHtml: "", tier: tierHabit(b2), kind: "habit", done: b2 });
+        rows.push({
+          title: "ルームマシン",
+          valueHtml: "",
+          tier: tierHabit(b3),
+          kind: "habit",
+          done: b3,
+        });
+        return rows;
+      }
+
+      function buildGrid(d) {
+        return collectRows(d)
+          .map(function (r) {
+            return cardHtml(r);
+          })
+          .join("");
+      }
+
+      var rows = collectRows(MOCK);
+      var tiers = rows.map(function (r) {
+        return r.tier;
+      });
+      var overall = worstTier(tiers);
+
+      document.getElementById("demo-updated").textContent =
+        MOCK.dateLabel + " " + (MOCK.updatedNote || "");
+      document.getElementById("hero-inner").innerHTML = buildHero(overall);
+      document.getElementById("grid").innerHTML = buildGrid(MOCK);
+    })();
+  </script>
+</body>
+</html>

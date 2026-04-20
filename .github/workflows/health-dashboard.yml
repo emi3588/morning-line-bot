@@ -36,7 +36,7 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install chromium --with-deps
 
-      - name: Run pipeline (Sheets → HTML → PNG → Imgur → LINE)
+      - name: Run pipeline (Sheets → HTML → PNG → LINE base64 image)
         env:
           TIMEZONE: Asia/Tokyo
           DAYS_OFFSET: "0"
@@ -45,7 +45,6 @@ jobs:
           SHEET_NAME: ${{ secrets.SHEET_NAME }}
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_TO_ID: ${{ secrets.LINE_TO_ID }}
-          IMGUR_CLIENT_ID: ${{ secrets.IMGUR_CLIENT_ID }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
         run: npm run run

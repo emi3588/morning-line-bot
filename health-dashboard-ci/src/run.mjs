@@ -7,7 +7,7 @@ import { evaluateSignalsFromRow } from './signals.mjs';
 import { renderDashboardHtml } from './render.mjs';
 import { buildHints } from './hints.mjs';
 import { captureDashboardPng } from './screenshot.mjs';
-import { linePushImage, uploadPngToImgur } from './line.mjs';
+import { linePushPngBuffer } from './line.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -35,13 +35,9 @@ async function main() {
   console.log('5) Playwright スクリーンショット…');
   await captureDashboardPng(htmlPath, pngPath);
 
-  console.log('6) Imgur アップロード…');
+  console.log('6) LINE 送信（PNG を base64 data URL で image メッセージ）…');
   const buf = fs.readFileSync(pngPath);
-  const url = await uploadPngToImgur(buf);
-  console.log('   URL:', url);
-
-  console.log('7) LINE 送信…');
-  await linePushImage(url);
+  await linePushPngBuffer(buf);
   console.log('完了');
 }
 

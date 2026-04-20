@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>健康チェック（mockup3 · 極シンプル）</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 12mm;
+      background-color: #f8fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 16px 12px 28px;
+      font-family: Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    .wrap {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .head {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .head h1 {
+      margin: 0;
+      font-size: 14pt;
+      font-weight: 800;
+    }
+
+    .head p {
+      margin: 6px 0 0;
+      font-size: 9pt;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    /* 全体：大きな単色円 + 数字のみ */
+    .hero {
+      margin: 0 auto 22px;
+      max-width: 280px;
+      padding: 20px 16px 22px;
+      text-align: center;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+    }
+
+    .lamp {
+      border-radius: 50%;
+      margin: 0 auto;
+    }
+
+    .lamp--green {
+      background: #16a34a;
+    }
+    .lamp--yellow {
+      background: #ca8a04;
+    }
+    .lamp--red {
+      background: #dc2626;
+    }
+
+    .lamp-hero {
+      width: 120px;
+      height: 120px;
+    }
+
+    .num {
+      margin: 14px 0 0;
+      font-size: 32pt;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    /* 9マス：カードは影だけ、中身は円 + 数字 */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .card {
+      padding: 18px 8px 16px;
+      text-align: center;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+    }
+
+    .lamp-cell {
+      width: 92px;
+      height: 92px;
+    }
+
+    .card .num {
+      margin-top: 12px;
+      font-size: 22pt;
+    }
+
+    .card .num.small {
+      font-size: 17pt;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="head">
+      <h1>健康チェック</h1>
+      <p>2026年4月18日（土）21:00</p>
+    </header>
+
+    <section class="hero" aria-label="全体">
+      <div class="lamp lamp--red lamp-hero"></div>
+      <p class="num">62</p>
+    </section>
+
+    <div class="grid">
+      <div class="card">
+        <div class="lamp lamp--green lamp-cell"></div>
+        <p class="num">85</p>
+      </div>
+      <div class="card">
+        <div class="lamp lamp--yellow lamp-cell"></div>
+        <p class="num">5.5</p>
+      </div>
+      <div class="card">
+        <div class="lamp lamp--green lamp-cell"></div>
+        <p class="num">8240</p>
+      </div>
+
+      <div class="card">
+        <div class="lamp lamp--yellow lamp-cell"></div>
+        <p class="num small">22:30</p>
+      </div>
+      <div class="card">
+        <div class="lamp lamp--green lamp-cell"></div>
+        <p class="num small">4:50</p>
+      </div>
+      <div class="card">
+        <div class="lamp lamp--green lamp-cell"></div>
+        <p class="num">3</p>
+      </div>
+
+      <div class="card">
+        <div class="lamp lamp--green lamp-cell"></div>
+        <p class="num">1</p>
+      </div>
+      <div class="card">
+        <div class="lamp lamp--red lamp-cell"></div>
+        <p class="num">0</p>
+      </div>
+      <div class="card">
+        <div class="lamp lamp--green lamp-cell"></div>
+        <p class="num">1</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
