@@ -7,7 +7,12 @@ import { evaluateSignalsFromRow } from './signals.mjs';
 import { renderDashboardHtml } from './render.mjs';
 import { buildHints } from './hints.mjs';
 import { captureDashboardPng } from './screenshot.mjs';
-import { saveDashboardPngLocal, buildDashboardPushText, linePushDashboardText } from './line.mjs';
+import {
+  saveDashboardPngLocal,
+  buildDashboardPushText,
+  linePushDashboardText,
+  linePushDashboardImageUrls
+} from './line.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -36,8 +41,16 @@ async function main() {
   const pngBuffer = await captureDashboardPng(htmlPath, pngPath);
   saveDashboardPngLocal(pngPath, pngBuffer);
 
-  console.log('6) LINE 送信（テキスト要約のみ）…');
-  await linePushDashboardText(buildDashboardPushText(row, signals, hints));
+  if (process.env.SKIP_LINE_PUSH) {
+    console.log('6) LINE 送信スキップ（SKIP_LINE_PUSH）');
+  } else if (process.env.LINE_DASHBOARD_IMAGE_URL) {
+    const u = String(process.env.LINE_DASHBOARD_IMAGE_URL).trim();
+    console.log('6) LINE 送信（image・HTTPS URL）…', u);
+    await linePushDashboardImageUrls(u);
+  } else {
+    console.log('6) LINE 送信（テキスト要約）…');
+    await linePushDashboardText(buildDashboardPushText(row, signals, hints));
+  }
   console.log('完了');
 }
 

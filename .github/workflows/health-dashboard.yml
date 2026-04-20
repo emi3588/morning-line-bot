@@ -1,5 +1,8 @@
 # 健康チェック: 毎日 21:00（日本時間）= UTC 12:00
-# 4パーツ: トリガー(GHA) → ソース(Sheets) → 処理(Node+Playwright) → 届け先(LINE)
+# Sheets → HTML/PNG → GitHub Pages に dashboard.png 公開 → LINE image（HTTPS URL）
+#
+# 初回: リポジトリ Settings → Pages → Build and deployment → Source を
+#       「GitHub Actions」にすること。
 
 name: Health dashboard to LINE
 
@@ -8,17 +11,18 @@ on:
     - cron: "0 12 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 concurrency:
-  group: health-dashboard-line
-  cancel-in-progress: true
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  build-and-send:
+  build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: health-dashboard-ci
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,20 +35,69 @@ jobs:
           cache-dependency-path: health-dashboard-ci/package-lock.json
 
       - name: Install npm packages
+        working-directory: health-dashboard-ci
         run: npm ci
 
       - name: Install Playwright Chromium
+        working-directory: health-dashboard-ci
         run: npx playwright install chromium --with-deps
 
-      - name: Run pipeline (Sheets → HTML → PNG 保存 → LINE テキスト)
+      - name: Run pipeline (Sheets → HTML → PNG、LINE は後段)
+        working-directory: health-dashboard-ci
         env:
+          SKIP_LINE_PUSH: "1"
           TIMEZONE: Asia/Tokyo
           DAYS_OFFSET: "0"
           GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
           SHEET_NAME: ${{ secrets.SHEET_NAME }}
-          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
-          LINE_TO_ID: ${{ secrets.LINE_TO_ID }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
         run: npm run run
+
+      - name: Prepare GitHub Pages (dashboard.png のみ公開)
+        run: |
+          mkdir -p gh-pages-root
+          cp health-dashboard-ci/dist/dashboard.png gh-pages-root/dashboard.png
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: gh-pages-root
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  line-push:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: health-dashboard-ci/package-lock.json
+
+      - name: Install npm packages
+        working-directory: health-dashboard-ci
+        run: npm ci
+
+      - name: Push LINE image message
+        working-directory: health-dashboard-ci
+        env:
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_TO_ID: ${{ secrets.LINE_TO_ID }}
+          LINE_DASHBOARD_IMAGE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/dashboard.png?v=${{ github.run_id }}&attempt=${{ github.run_attempt }}
+        run: npm run push:line-image

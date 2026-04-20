@@ -6,6 +6,7 @@
   "description": "健康チェック: Sheets → 判定 → mockup HTML → Playwright 画像 → LINE（GitHub Actions 用）",
   "scripts": {
     "run": "node src/run.mjs",
+    "push:line-image": "node src/pushLineImage.mjs",
     "screenshot": "node src/screenshot.mjs"
   },
   "engines": {

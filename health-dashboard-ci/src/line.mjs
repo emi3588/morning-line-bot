@@ -1,7 +1,6 @@
 /**
- * LINE Messaging API でテキストを push する。
- * PNG は data URL では送れないため、バッファはローカルファイルに保存し、
- * ダッシュボード要約は type: "text" のみ送信する。
+ * LINE Messaging API: テキスト push、または HTTPS 画像 URL の image push。
+ * image は originalContentUrl / previewImageUrl に公開 HTTPS のみ（data URL 不可）。
  */
 
 import fs from 'fs';
@@ -22,6 +21,43 @@ export function saveDashboardPngLocal(filePath, pngBuffer) {
   const dir = path.dirname(filePath);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(filePath, buf);
+}
+
+/**
+ * @param {string} imageUrl HTTPS の PNG/JPEG（LINE が取得可能な URL）
+ * @param {string} [previewUrl] 未指定時は imageUrl と同じ
+ */
+export async function linePushDashboardImageUrls(imageUrl, previewUrl = imageUrl) {
+  const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  const to = process.env.LINE_TO_ID;
+  if (!token || !to) {
+    throw new Error('LINE_CHANNEL_ACCESS_TOKEN と LINE_TO_ID を設定してください');
+  }
+  if (!/^https:\/\//i.test(String(imageUrl))) {
+    throw new Error('LINE の画像 URL は https:// で始まる必要があります');
+  }
+  const preview = previewUrl || imageUrl;
+  const res = await fetch('https://api.line.me/v2/bot/message/push', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      to,
+      messages: [
+        {
+          type: 'image',
+          originalContentUrl: imageUrl,
+          previewImageUrl: preview
+        }
+      ]
+    })
+  });
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(`LINE push 失敗: ${res.status} ${t}`);
+  }
 }
 
 function signalMark(signal) {
