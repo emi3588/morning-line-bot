@@ -49,7 +49,7 @@ export async function linePushPngBuffer(pngBuffer) {
     const t = await res.text();
     throw new Error(
       `LINE push 失敗: ${res.status} ${t}\n` +
-        '（data URL が拒否された場合は、画像サイズを下げるか HTTPS 公開 URL 方式に切り替えてください）`
+        '（data URL が拒否された場合は、画像サイズを下げるか HTTPS 公開 URL 方式に切り替えてください）'
     );
   }
 }
