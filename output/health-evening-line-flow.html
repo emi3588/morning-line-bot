@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>健康・食事・気分 → 夜LINE｜構成フロー図</title>
+  <style>
+    @page { size: A4; margin: 12mm; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", system-ui, sans-serif;
+      color: #0f172a;
+      background: linear-gradient(180deg, #f0f9ff 0%, #fff7ed 100%);
+      padding: 20px 16px 32px;
+      line-height: 1.55;
+    }
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .toolbar button {
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid #bae6fd;
+      background: #fff;
+      color: #0369a1;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(14, 116, 144, 0.12);
+    }
+    .toolbar button:hover { background: #f0f9ff; }
+    @media print {
+      .toolbar { display: none; }
+      body { background: #fff; padding: 0; }
+    }
+    .hero {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .hero .kicker {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: #64748b;
+      font-weight: 700;
+      margin: 0 0 8px;
+    }
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin: 0 0 8px;
+      color: #0369a1;
+      letter-spacing: -0.02em;
+    }
+    .hero p.lead {
+      margin: 0;
+      font-size: 14px;
+      color: #334155;
+      font-weight: 600;
+    }
+    h2 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #0c4a6e;
+      margin: 28px 0 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #bae6fd;
+    }
+    h2:first-of-type { margin-top: 0; }
+    .grid4 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 560px) {
+      .grid4 { grid-template-columns: 1fr; }
+    }
+    .part {
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+    }
+    .part h3 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #0284c7;
+      letter-spacing: 0.04em;
+    }
+    .part p {
+      margin: 0;
+      font-size: 13px;
+      color: #334155;
+      font-weight: 600;
+    }
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .step {
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px 16px 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+      position: relative;
+    }
+    .step + .step { margin-top: 10px; }
+    .step::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -10px;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 10px;
+      background: linear-gradient(#38bdf8, #0ea5e9);
+    }
+    .step:first-child::before { display: none; }
+    .step .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+      background: #0ea5e9;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+    .step .tag.src2 { background: #8b5cf6; }
+    .step .tag.proc { background: #059669; }
+    .step .tag.out { background: #ea580c; }
+    .step h4 {
+      margin: 0 0 6px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .step p.detail {
+      margin: 0;
+      font-size: 13px;
+      color: #475569;
+      font-weight: 600;
+    }
+    ul.memo {
+      margin: 8px 0 0;
+      padding-left: 1.2em;
+      font-size: 13px;
+      color: #334155;
+      font-weight: 600;
+    }
+    ul.memo li { margin: 4px 0; }
+    .footer-note {
+      margin-top: 28px;
+      font-size: 12px;
+      color: #64748b;
+      text-align: center;
+    }
+    .footer-note a { color: #0284c7; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="toolbar">
+      <button type="button" onclick="window.print()">PDF / 印刷</button>
+    </div>
+
+    <header class="hero">
+      <p class="kicker">ツール構成（完成イメージ）</p>
+      <h1>毎日21時 · 健康・体調 → LINE（AI総合判定つき）</h1>
+      <p class="lead">
+        記録（自動）と体調（手入力）を分け、今日の気分は顔マーク、続けて AI総合判定（😊😐😞）を出してから一言コメント。トリガー〜出力の流れです。
+      </p>
+    </header>
+
+    <h2>4つのパーツ（講義の言い方）</h2>
+    <div class="grid4">
+      <div class="part">
+        <h3>トリガー</h3>
+        <p>毎日 21:00 · 自動実行</p>
+      </div>
+      <div class="part">
+        <h3>ソース元（データの出どころ）</h3>
+        <p>① 自動：睡眠・歩数・運動・<strong>座り時間</strong>・就寝起床　② 手入力：食事・<strong>気分（😊😐😞）</strong>・<strong>便通</strong></p>
+      </div>
+      <div class="part">
+        <h3>処理する場所</h3>
+        <p>整形 → <strong>AI総合判定</strong>（全データ＋気分強め＋便通は補助）→ 一言コメント</p>
+      </div>
+      <div class="part">
+        <h3>出力（届け先）</h3>
+        <p>LINE（指定フォーマットの1通）</p>
+      </div>
+    </div>
+
+    <h2>メインフロー（時系列）</h2>
+    <div class="flow">
+      <div class="step">
+        <span class="tag">トリガー</span>
+        <h4>毎日 21:00</h4>
+        <p class="detail">スケジューラが処理を開始</p>
+      </div>
+      <div class="step">
+        <span class="tag">ソース元 ①</span>
+        <h4>健康データ取得</h4>
+        <p class="detail">睡眠スコア・睡眠時間・歩数・運動時間・<strong>座っていた時間</strong>・就寝・起床</p>
+      </div>
+      <div class="step">
+        <span class="tag src2">ソース元 ②</span>
+        <h4>手入力を取得</h4>
+        <p class="detail">食事（1行 or 写真）· 気分（😊😐😞 自分選択）· 便通（あり／なし）</p>
+      </div>
+      <div class="step">
+        <span class="tag proc">処理</span>
+        <h4>まとめて整理</h4>
+        <p class="detail">指定フォーマットに1画面分で収まるよう圧縮</p>
+      </div>
+      <div class="step">
+        <span class="tag proc">処理</span>
+        <h4>AI総合判定</h4>
+        <p class="detail">😊安定 😐少し注意 😞要調整 · 気分を強めに反映 · 便通は補助</p>
+      </div>
+      <div class="step">
+        <span class="tag proc">処理</span>
+        <h4>一言コメント生成</h4>
+        <p class="detail">判定と数値を踏まえた1文（ルールでもAIでも可）</p>
+      </div>
+      <div class="step">
+        <span class="tag out">出力</span>
+        <h4>LINE 送信</h4>
+        <p class="detail">記録／体調／AI総合判定／一言 · 顔マークは色付きバッジ</p>
+      </div>
+    </div>
+
+    <h2>ソース元の内訳（設計メモ）</h2>
+    <div class="part" style="margin-bottom: 12px;">
+      <h3>自動で取りたい数値（記録）</h3>
+      <ul class="memo">
+        <li>睡眠スコア・睡眠時間</li>
+        <li>歩数・運動時間</li>
+        <li><strong>座っていた時間</strong></li>
+        <li>就寝時刻・起床時刻</li>
+      </ul>
+      <p class="detail" style="margin-top: 10px;">iPhone / Android / ウォッチなど、接続先を決める必要あり。</p>
+    </div>
+    <div class="part">
+      <h3>手入力（体調）</h3>
+      <ul class="memo">
+        <li>食事：1行テキスト or 写真1枚</li>
+        <li>気分：<strong>😊 / 😐 / 😞</strong>（自分で選ぶ · LINEでは色付きバッジ）</li>
+        <li>便通：<strong>あり / なし</strong>（気分の近くに表示 · AI判定は補助）</li>
+      </ul>
+      <p class="detail" style="margin-top: 10px;">表示は「記録」と「体調」でブロック分け。スプレッドシート・フォーム等、入口は1つに。</p>
+    </div>
+
+    <h2>AI総合判定ルール（設計メモ）</h2>
+    <div class="part">
+      <ul class="memo">
+        <li><strong>意味：</strong>😊 状態が安定 · 😐 少し注意 · 😞 要調整</li>
+        <li><strong>材料：</strong>睡眠スコア・睡眠時間・歩数・運動・就寝・起床・座り時間・<strong>今日の気分</strong>・便通</li>
+        <li><strong>今日の気分</strong>はユーザー選択。判定に<strong>強め</strong>に効かせる。</li>
+        <li><strong>便通</strong>は<strong>補助</strong>。他のデータを優先。</li>
+        <li>見た目は<strong>色付きバッジ</strong>（気分・AI判定とも 😊😐😞）。</li>
+      </ul>
+      <p class="detail" style="margin-top: 12px;">制約：シンプル · 1画面 · 入力は最小限。</p>
+    </div>
+
+    <p class="footer-note">
+      個人用設計メモ · リポジトリ内ファイル <code>output/health-evening-line-flow.html</code><br />
+      公開例（Surge）: <a href="https://diagram-health-evening-line-20260411.surge.sh/health-evening-line-flow.html" target="_blank" rel="noopener">同一構成</a>
+      · GitHub Pages（CI 後）:
+      <a href="https://emi3588.github.io/morning-line-bot/health-evening-line-flow.html" target="_blank" rel="noopener">HTTPS URL</a>
+    </p>
+  </div>
+</body>
+</html>

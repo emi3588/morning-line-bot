@@ -1,5 +1,5 @@
 # 健康チェック: 毎日 21:00（日本時間）= UTC 12:00
-# Sheets → HTML/PNG → GitHub Pages に dashboard.png 公開 → LINE image（HTTPS URL）
+# Sheets → HTML/PNG → GitHub Pages（dashboard.png + 図解HTML）→ LINE image（HTTPS URL）
 #
 # 初回: リポジトリ Settings → Pages → Build and deployment → Source を
 #       「GitHub Actions」にすること。
@@ -55,10 +55,22 @@ jobs:
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
         run: npm run run
 
-      - name: Prepare GitHub Pages (dashboard.png のみ公開)
+      - name: Verify diagram HTML is in repo（未コミットだと Pages で 404）
+        run: |
+          test -f output/health-evening-line-flow.html || { echo "::error::output/health-evening-line-flow.html がありません。git add / commit / push してください。"; exit 1; }
+          test -f output/health-pages-index.html || { echo "::error::output/health-pages-index.html がありません。git add / commit / push してください。"; exit 1; }
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare GitHub Pages（PNG + 図解 HTML）
         run: |
           mkdir -p gh-pages-root
           cp health-dashboard-ci/dist/dashboard.png gh-pages-root/dashboard.png
+          cp output/health-check-mockup-6.html gh-pages-root/health-check-mockup-6.html
+          cp output/health-evening-line-flow.html gh-pages-root/health-evening-line-flow.html
+          cp output/health-pages-index.html gh-pages-root/index.html
+          ls -la gh-pages-root
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
