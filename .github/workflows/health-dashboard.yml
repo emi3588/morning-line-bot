@@ -47,7 +47,7 @@ jobs:
         env:
           SKIP_LINE_PUSH: "1"
           TIMEZONE: Asia/Tokyo
-          DAYS_OFFSET: "0"
+          DAYS_OFFSET: "1"
           GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
           SHEET_NAME: ${{ secrets.SHEET_NAME }}
