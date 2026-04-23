@@ -26,17 +26,9 @@ jobs:
         run: npm ci
       - name: Install Playwright Chromium
         run: npx playwright install chromium --with-deps
-      - name: Write GCP service account key
-        env:
-          GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
-        run: |
-          printf '%s' "$GOOGLE_CREDENTIALS_JSON" > "${{ runner.temp }}/gcp-sa.json"
+      # --dry-run は LINE のみスキップ。シート／GCP／OpenAI を触らないよう --from-json で固定サンプルを使う。
       - name: Generate PNG
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-sa.json
-          SHEET_ID: ${{ secrets.SHEET_ID }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: node scripts/send-line-report.mjs --dry-run
+        run: node scripts/send-line-report.mjs --dry-run --from-json output/learning-summary-preview.sample.json
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Prepare GitHub Pages

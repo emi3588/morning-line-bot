@@ -15,8 +15,8 @@
  * 初回のみ: npx playwright install chromium
  *
  * オプション:
- *   --dry-run         PNG 保存のみ（LINE 送信しない）
- *   --from-json path  スプレッドシート／OpenAI を使わず、完成済み JSON から HTML→PNG→送信
+ *   --dry-run         PNG 保存のみ（LINE 送信しない）。シート／OpenAI を読まないには --from-json と併用すること。
+ *   --from-json path  スプレッドシート／OpenAI を使わず、完成済み JSON から HTML→PNG→（送信）
  *
  * 全部つなげて一気に動かす例（PowerShell）:
  *   $env:SHEET_ID="..."
