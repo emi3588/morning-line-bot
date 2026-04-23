@@ -1,0 +1,14 @@
+{
+  "name": "morning-line-bot",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "report:send": "node scripts/send-line-report.mjs",
+    "report:dry": "node scripts/send-line-report.mjs --dry-run",
+    "learning:push-line": "node scripts/push-learning-line-image.mjs"
+  },
+  "dependencies": {
+    "googleapis": "^144.0.0",
+    "playwright": "^1.49.0"
+  }
+}
