@@ -9,6 +9,7 @@
  *   LINE_LEARNING_IMAGE_URL … GitHub Pages 等に置いた PNG の HTTPS URL（送信時必須）
  *   SHEET_ID, GOOGLE_APPLICATION_CREDENTIALS … fetch-learning-sheet と同じ
  *   OPENAI_API_KEY … generate-ai-comments と同じ
+ *   SKIP_LINE_PUSH … "1" のとき PNG まで実行し LINE のみスキップ（GitHub Actions の Pages デプロイ前ジョブ用）
  *
  * PNG は常に output/learning-report.png に保存する（CI で Pages に載せる想定）。
  *
@@ -117,6 +118,12 @@ async function main() {
 
   if (dryRun) {
     console.error('（--dry-run のため LINE Messaging API は呼び出していません）');
+    return;
+  }
+
+  const skipLine = String(process.env.SKIP_LINE_PUSH || '').trim();
+  if (skipLine === '1' || /^true$/i.test(skipLine) || /^yes$/i.test(skipLine)) {
+    console.error('（SKIP_LINE_PUSH のため LINE Messaging API は呼び出していません）');
     return;
   }
 

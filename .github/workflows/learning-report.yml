@@ -1,6 +1,14 @@
+# 学習レポート: 毎朝 7:00（日本時間）= UTC 22:00（前日）
+# Sheets → OpenAI → HTML/PNG → GitHub Pages → LINE image（HTTPS URL）
+#
+# 初回: リポジトリ Settings → Pages → Source を「GitHub Actions」にすること。
+# Secrets: GOOGLE_CREDENTIALS_JSON, SHEET_ID, OPENAI_API_KEY,
+#          LINE_CHANNEL_ACCESS_TOKEN, LINE_TO_ID
+
 name: Learning Report to LINE
 on:
   schedule:
+    # 07:00 JST = 22:00 UTC（GitHub cron は UTC 基準）
     - cron: "0 22 * * *"
   workflow_dispatch:
 permissions:
@@ -26,9 +34,18 @@ jobs:
         run: npm ci
       - name: Install Playwright Chromium
         run: npx playwright install chromium --with-deps
-      # --dry-run は LINE のみスキップ。シート／GCP／OpenAI を触らないよう --from-json で固定サンプルを使う。
-      - name: Generate PNG
-        run: node scripts/send-line-report.mjs --dry-run --from-json output/learning-summary-preview.sample.json
+      - name: Write GCP service account key
+        env:
+          GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
+        run: |
+          printf '%s' "$GOOGLE_CREDENTIALS_JSON" > "${{ runner.temp }}/gcp-sa.json"
+      - name: Generate PNG（スプレッドシート → OpenAI → PNG、LINE は後段）
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-sa.json
+          SHEET_ID: ${{ secrets.SHEET_ID }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SKIP_LINE_PUSH: "1"
+        run: node scripts/send-line-report.mjs
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Prepare GitHub Pages
