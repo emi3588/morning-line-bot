@@ -9,7 +9,7 @@ import fs from 'fs';
 export async function captureDashboardPng(htmlPath, pngPath) {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({
-    viewport: { width: 520, height: 1200 },
+    viewport: { width: 800, height: 1200 },
     deviceScaleFactor: 2
   });
   const fileUrl = pathToFileURL(path.resolve(htmlPath)).href;
