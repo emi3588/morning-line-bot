@@ -174,3 +174,47 @@ export async function linePushDashboardText(text) {
     throw new Error(`LINE push 失敗: ${res.status} ${t}`);
   }
 }
+/**
+ * @param {string} imageUrl HTTPS の PNG/JPEG
+ */
+export async function linePushDashboardFlex(imageUrl) {
+  const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  const to = process.env.LINE_TO_ID;
+  if (!token || !to) {
+    throw new Error('LINE_CHANNEL_ACCESS_TOKEN と LINE_TO_ID を設定してください');
+  }
+  const flexMessage = {
+    type: 'flex',
+    altText: '健康ダッシュボード',
+    contents: {
+      type: 'bubble',
+      size: 'giga',
+      body: {
+        type: 'box',
+        layout: 'vertical',
+        paddingAll: '0px',
+        contents: [
+          {
+            type: 'image',
+            url: imageUrl,
+            size: 'full',
+            aspectMode: 'fit',
+            aspectRatio: '1:1.8'
+          }
+        ]
+      }
+    }
+  };
+  const res = await fetch('https://api.line.me/v2/bot/message/push', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ to, messages: [flexMessage] })
+  });
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(`LINE Flex push 失敗: ${res.status} ${t}`);
+  }
+}
