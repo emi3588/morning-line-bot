@@ -15,12 +15,6 @@ function escapeHtml(s) {
 }
 
 export function formatMetaLineSync(row, tz = 'Asia/Tokyo') {
-  const hhmm = new Intl.DateTimeFormat('ja-JP', {
-    timeZone: tz,
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  }).format(new Date());
   const cell = row.date;
   let d = new Date();
   if (cell && typeof cell === 'object' && typeof cell.getTime === 'function' && !Number.isNaN(cell.getTime())) {
@@ -35,7 +29,7 @@ export function formatMetaLineSync(row, tz = 'Asia/Tokyo') {
   const y = d.getFullYear();
   const mo = d.getMonth() + 1;
   const da = d.getDate();
-  return `${y}年${mo}月${da}日（${w}）${hhmm} 集計`;
+  return `${y}年${mo}月${da}日（${w}）`;
 }
 
 function displayValue(row, key, signalKey) {
