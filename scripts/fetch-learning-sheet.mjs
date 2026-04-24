@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * 学習記録スプレッドシートから「今日の日付（MM/DD）」に一致する行を取得し、
+ * 学習記録スプレッドシートから「前日の日付（MM/DD）」に一致する行を取得し、
  * HTML テンプレ用のキー（{{DATE}}〜{{TERM}}）に対応するオブジェクトを返す / JSON 出力する。
+ * （毎朝 7 時のジョブで「昨日の学習」を送る想定）
  *
  * 列（1行目ヘッダー、2行目以降がデータ）:
  *   A: 日付 MM/DD  B:連続 C:コース D:レッスン E:週間 F:月間 G:累計
@@ -89,7 +90,7 @@ function cellStr(v) {
 
 /**
  * @param {string[][]} rows API の values（ヘッダー行は含まない想定）
- * @param {string} targetMmdd 今日の MM/DD
+ * @param {string} targetMmdd 検索する MM/DD（例: 前日）
  */
 export function pickRowForMmdd(rows, targetMmdd) {
   const want = normalizeMmdd(targetMmdd) || targetMmdd;
@@ -106,10 +107,10 @@ export function pickRowForMmdd(rows, targetMmdd) {
 
 /**
  * @param {string[]} row
- * @param {string} mmdd マッチした MM/DD（表示年はローカル年）
+ * @param {string} mmdd マッチした MM/DD
+ * @param {number} [year] 表示用の年（省略時は実行時の「今日」の年）
  */
-export function rowToTemplateFields(row, mmdd) {
-  const year = new Date().getFullYear();
+export function rowToTemplateFields(row, mmdd, year = new Date().getFullYear()) {
   const DATE = formatJapaneseDateFromMmdd(mmdd, year);
   return {
     DATE,
@@ -146,10 +147,17 @@ async function getSheetsClient() {
   return google.sheets({ version: 'v4', auth: client });
 }
 
+/** ローカルタイムゾーンで「昨日」の Date */
+function getYesterdayDate() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return d;
+}
+
 /**
- * スプレッドシートから本日 MM/DD に一致する行を取得し、テンプレ用フィールドに変換する。
+ * スプレッドシートから前日（昨日）の MM/DD に一致する行を取得し、テンプレ用フィールドに変換する。
  */
-export async function fetchLearningFieldsForToday(options = {}) {
+export async function fetchLearningFieldsForYesterday(options = {}) {
   const sheetId = options.sheetId ?? SHEET_ID;
   const range = options.range ?? SHEET_RANGE;
 
@@ -166,16 +174,17 @@ export async function fetchLearningFieldsForToday(options = {}) {
   });
 
   const rows = res.data.values || [];
-  const todayMmdd = toMmDdFromDate(new Date());
-  const hit = pickRowForMmdd(rows, todayMmdd);
+  const yesterday = getYesterdayDate();
+  const yesterdayMmdd = toMmDdFromDate(yesterday);
+  const hit = pickRowForMmdd(rows, yesterdayMmdd);
 
   if (!hit) {
     throw new Error(
-      `本日（${todayMmdd}）に一致する行が ${range} 内に見つかりませんでした。A列の日付形式を MM/DD で確認してください。`
+      `前日（${yesterdayMmdd}）に一致する行が ${range} 内に見つかりませんでした。A列の日付形式を MM/DD で確認してください。`
     );
   }
 
-  const fields = rowToTemplateFields(hit.row, hit.mmdd);
+  const fields = rowToTemplateFields(hit.row, hit.mmdd, yesterday.getFullYear());
   return {
     meta: {
       sheetId,
@@ -190,7 +199,7 @@ export async function fetchLearningFieldsForToday(options = {}) {
 
 async function main() {
   const jsonFlag = process.argv.includes('--json');
-  const result = await fetchLearningFieldsForToday();
+  const result = await fetchLearningFieldsForYesterday();
   const out = jsonFlag ? JSON.stringify(result, null, 2) : JSON.stringify(result.fields, null, 2);
   process.stdout.write(out + '\n');
 }

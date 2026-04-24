@@ -34,7 +34,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { chromium } from 'playwright';
 import { linePushDashboardImageUrls } from '../health-dashboard-ci/src/line.mjs';
-import { fetchLearningFieldsForToday } from './fetch-learning-sheet.mjs';
+import { fetchLearningFieldsForYesterday } from './fetch-learning-sheet.mjs';
 import { generateAiComments } from './generate-ai-comments.mjs';
 import { fillLearningSummaryHtml } from './fill-learning-summary.mjs';
 
@@ -102,7 +102,7 @@ async function main() {
     const raw = fs.readFileSync(path.resolve(process.cwd(), fromJson), 'utf8');
     merged = normalizeMergedInput(JSON.parse(raw.trim()));
   } else {
-    const { fields } = await fetchLearningFieldsForToday();
+    const { fields } = await fetchLearningFieldsForYesterday();
     const ai = await generateAiComments(fields);
     merged = { ...fields, ...ai };
   }
