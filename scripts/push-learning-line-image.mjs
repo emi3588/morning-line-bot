@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * LINE_LEARNING_IMAGE_URL（HTTPS）をプッシュします。
+ * LINE_LEARNING_IMAGE_URL（HTTPS）をFlexメッセージでプッシュします。
  * 環境変数: LINE_CHANNEL_ACCESS_TOKEN、LINE_TO_ID、LINE_LEARNING_IMAGE_URL
  */
-import { linePushDashboardImageUrls } from '../health-dashboard-ci/src/line.mjs';
+import { linePushDashboardFlex } from '../health-dashboard-ci/src/line.mjs';
 
 const URL = process.env.LINE_LEARNING_IMAGE_URL;
 if (!URL || !URL.trim()) {
@@ -13,5 +13,5 @@ if (!URL || !URL.trim()) {
   process.exit(1);
 }
 
-await linePushDashboardImageUrls(String(URL).trim());
+await linePushDashboardFlex(String(URL).trim());
 console.log('LINE学習レポート画像プッシュ完了：', URL);
