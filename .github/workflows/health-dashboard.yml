@@ -91,7 +91,7 @@ jobs:
       - name: Push LINE image message
         working-directory: health-dashboard-ci
         env:
-          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
-          LINE_TO_ID: ${{ secrets.LINE_TO_ID }}
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN_HEALTH }}
+          LINE_TO_ID: ${{ secrets.LINE_TO_ID_HEALTH }}
           LINE_DASHBOARD_IMAGE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/dashboard.png?v=${{ github.run_id }}&attempt=${{ github.run_attempt }}
         run: npm run push:line-image
