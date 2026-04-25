@@ -3,45 +3,36 @@
 #
 # 初回: リポジトリ Settings → Pages → Build and deployment → Source を
 #       「GitHub Actions」にすること。
-
 name: Health dashboard to LINE
-
 on:
   schedule:
-    - cron: "0 22 * * *"
+    - cron: "0 21 * * *"
   workflow_dispatch:
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
-  group: pages
+  group: health-dashboard
   cancel-in-progress: false
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
           cache-dependency-path: health-dashboard-ci/package-lock.json
-
       - name: Install npm packages
         working-directory: health-dashboard-ci
         run: npm ci
-
       - name: Install Playwright Chromium
         working-directory: health-dashboard-ci
         run: npx playwright install chromium --with-deps
-
       - name: Run pipeline (Sheets → HTML → PNG、LINE は後段)
         working-directory: health-dashboard-ci
         env:
@@ -54,15 +45,12 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
         run: npm run run
-
       - name: Verify diagram HTML is in repo（未コミットだと Pages で 404）
         run: |
           test -f output/health-evening-line-flow.html || { echo "::error::output/health-evening-line-flow.html がありません。git add / commit / push してください。"; exit 1; }
           test -f output/health-pages-index.html || { echo "::error::output/health-pages-index.html がありません。git add / commit / push してください。"; exit 1; }
-
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-
       - name: Prepare GitHub Pages（PNG + 図解 HTML）
         run: |
           mkdir -p gh-pages-root
@@ -71,12 +59,10 @@ jobs:
           cp output/health-evening-line-flow.html gh-pages-root/health-evening-line-flow.html
           cp output/health-pages-index.html gh-pages-root/index.html
           ls -la gh-pages-root
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: gh-pages-root
-
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -87,25 +73,21 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
   line-push:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
           cache-dependency-path: health-dashboard-ci/package-lock.json
-
       - name: Install npm packages
         working-directory: health-dashboard-ci
         run: npm ci
-
       - name: Push LINE image message
         working-directory: health-dashboard-ci
         env:
