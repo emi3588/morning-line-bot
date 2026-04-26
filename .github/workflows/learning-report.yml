@@ -4,11 +4,9 @@
 # 初回: リポジトリ Settings → Pages → Source を「GitHub Actions」にすること。
 # Secrets: GOOGLE_CREDENTIALS_JSON, SHEET_ID, OPENAI_API_KEY,
 #          LINE_CHANNEL_ACCESS_TOKEN, LINE_TO_ID
-
 name: Learning Report to LINE
 on:
   schedule:
-    # 07:00 JST = 22:00 UTC（GitHub cron は UTC 基準）
     - cron: "0 22 * * *"
   workflow_dispatch:
 permissions:
@@ -16,7 +14,7 @@ permissions:
   pages: write
   id-token: write
 concurrency:
-  group: pages
+  group: learning-report
   cancel-in-progress: false
 jobs:
   build:
