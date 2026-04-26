@@ -147,11 +147,12 @@ async function getSheetsClient() {
   return google.sheets({ version: 'v4', auth: client });
 }
 
-/** ローカルタイムゾーンで「昨日」の Date */
+/** JST（日本時間）で「昨日」の Date */
 function getYesterdayDate() {
-  const d = new Date();
-  d.setDate(d.getDate() - 1);
-  return d;
+  const now = new Date();
+  const jst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  jst.setDate(jst.getDate() - 1);
+  return jst;
 }
 
 /**
