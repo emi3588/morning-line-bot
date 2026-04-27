@@ -48,19 +48,15 @@ export function isCircleMark(cell) {
 }
 
 export function evaluateSleepScoreSignal(cell) {
-  const n = parseNumberLoose(cell);
-  if (n == null) return 'red';
-  if (n >= 80) return 'green';
-  if (n >= 60) return 'yellow';
-  return 'red';
+  return 'none';
 }
 
 export function evaluateSleepDurationSignal(cell) {
   const minutes = parseJapaneseDurationToMinutes(cell);
-  if (minutes == null) return 'red';
-  if (minutes >= 7 * 60) return 'green';
+  if (minutes == null) return 'yellow';
   if (minutes >= 6 * 60) return 'yellow';
-  return 'red';
+  if (minutes >= 5 * 60) return 'green';
+  return 'yellow';
 }
 
 export function evaluateStepsSignal(cell) {
@@ -82,8 +78,8 @@ export function evaluateBedtimeSignal(cell) {
 export function evaluateWakeupSignal(cell) {
   const m = parseClockToMinutesFromMidnight(cell);
   if (m == null) return 'red';
-  if (m <= 4 * 60 + 59) return 'red';
-  if (m <= 5 * 60 + 59) return 'green';
+  if (m <= 4 * 60 + 59) return 'yellow';
+  if (m <= 6 * 60) return 'green';
   return 'yellow';
 }
 
@@ -100,9 +96,6 @@ export function evaluateCircleFieldSignal(cell) {
   return isCircleMark(cell) ? 'green' : 'red';
 }
 
-/**
- * row: { sleepScore, sleepDuration, steps, bedtime, wakeup, mood, bowel, walk, roomMachine } 生値
- */
 export function evaluateSignalsFromRow(row) {
   return {
     sleepScore: evaluateSleepScoreSignal(row.sleepScore),
@@ -118,14 +111,17 @@ export function evaluateSignalsFromRow(row) {
 }
 
 export function worstSignalOverall(signals) {
-  let worst = 'green';
   const order = ['sleepScore', 'sleepHours', 'steps', 'bedtime', 'wakeup', 'mood', 'bowel', 'walk', 'roomMachine'];
+  let hasRed = false;
+  let hasYellow = false;
   for (const k of order) {
     const s = signals[k];
-    if (s === 'red') worst = 'red';
-    else if (s === 'yellow' && worst !== 'red') worst = 'yellow';
+    if (s === 'red') hasRed = true;
+    else if (s === 'yellow') hasYellow = true;
   }
-  return worst;
+  if (hasRed) return 'red';
+  if (hasYellow) return 'yellow';
+  return 'green';
 }
 
 export const SIGNAL_ITEM_LABELS = {
@@ -157,6 +153,7 @@ export function buildHeroMessage(signals) {
 export function lampClass(signal) {
   if (signal === 'green') return 'lamp lamp--green lamp-sm';
   if (signal === 'yellow') return 'lamp lamp--yellow lamp-sm';
+  if (signal === 'none') return 'lamp lamp--none lamp-sm';
   return 'lamp lamp--red lamp-sm';
 }
 
