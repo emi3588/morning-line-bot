@@ -48,15 +48,19 @@ export function isCircleMark(cell) {
 }
 
 export function evaluateSleepScoreSignal(cell) {
-  return 'none';
+  const n = parseNumberLoose(cell);
+  if (n == null) return 'red';
+  if (n >= 90) return 'green';
+  if (n >= 71) return 'yellow';
+  return 'red';
 }
 
 export function evaluateSleepDurationSignal(cell) {
   const minutes = parseJapaneseDurationToMinutes(cell);
-  if (minutes == null) return 'yellow';
+  if (minutes == null) return 'red';
+  if (minutes >= 7 * 60) return 'green';
   if (minutes >= 6 * 60) return 'yellow';
-  if (minutes >= 5 * 60) return 'green';
-  return 'yellow';
+  return 'red';
 }
 
 export function evaluateStepsSignal(cell) {
@@ -78,8 +82,8 @@ export function evaluateBedtimeSignal(cell) {
 export function evaluateWakeupSignal(cell) {
   const m = parseClockToMinutesFromMidnight(cell);
   if (m == null) return 'red';
-  if (m <= 4 * 60 + 59) return 'yellow';
-  if (m <= 6 * 60) return 'green';
+  if (m <= 4 * 60 + 59) return 'red';
+  if (m <= 5 * 60 + 59) return 'green';
   return 'yellow';
 }
 
@@ -153,7 +157,6 @@ export function buildHeroMessage(signals) {
 export function lampClass(signal) {
   if (signal === 'green') return 'lamp lamp--green lamp-sm';
   if (signal === 'yellow') return 'lamp lamp--yellow lamp-sm';
-  if (signal === 'none') return 'lamp lamp--none lamp-sm';
   return 'lamp lamp--red lamp-sm';
 }
 
