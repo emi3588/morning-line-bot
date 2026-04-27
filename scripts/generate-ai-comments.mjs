@@ -1,24 +1,7 @@
 #!/usr/bin/env node
 /**
  * スプレッドシート由来の fields に、OpenAI API で以下を付与して JSON 出力する。
- *   TERM_DESCRIPTION, AI_ASIDE_*, AI_MESSAGE
- *
- * 文字数目安（日本語の「文字」＝ Unicode コードポイント数）:
- *   TERM_DESCRIPTION と各 AI_ASIDE_* … 30〜50 文字
- *   AI_MESSAGE … 60〜80 文字（2文程度）
- * トーン: 温かく・背中を押す・「えみりん」の頑張りを認める
- *
- * 環境変数:
- *   OPENAI_API_KEY（必須）
- *   OPENAI_MODEL   省略時 gpt-4o-mini
- *
- * 入力 JSON の形:
- *   { "DATE": "...", "YESTERDAY": "...", ... }  そのまま
- *   または fetch-learning-sheet の --json 出力 { "meta": {...}, "fields": {...} }
- *
- * 使い方:
- *   node scripts/fetch-learning-sheet.mjs | node scripts/generate-ai-comments.mjs
- *   node scripts/generate-ai-comments.mjs path/to/fields.json
+ *   TERM_DESCRIPTION, TERM_ACTION, AI_ASIDE_*, AI_MESSAGE
  */
 
 import fs from 'fs';
@@ -28,6 +11,7 @@ const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
 
 const AI_KEYS = [
   'TERM_DESCRIPTION',
+  'TERM_ACTION',
   'AI_ASIDE_YESTERDAY',
   'AI_ASIDE_UNDERSTOOD',
   'AI_ASIDE_UNCLEAR',
@@ -91,12 +75,13 @@ const SYSTEM_PROMPT = `あなたは学習記録の応援コメントを書くア
 
 必須キー（すべて文字列）:
 - TERM_DESCRIPTION … 今日の用語の意味を、えみりん向けに短く1〜2文で。30〜50文字（厳守）。
-- AI_ASIDE_YESTERDAY … 「昨日の学習」へのひとこと。30〜50文字（厳守）。
-- AI_ASIDE_UNDERSTOOD … 「理解できたこと」へのひとこと。30〜50文字（厳守）。
-- AI_ASIDE_UNCLEAR … 「まだ曖昧なこと」へのひとこと。焦らせず安心させる。30〜50文字（厳守）。
-- AI_ASIDE_FOCUS … 「今日のフォーカス」へのひとこと。30〜50文字（厳守）。
-- AI_ASIDE_TERM … 「今日の用語」へのひとこと（用語そのものの解説ではなく、励まし・ねぎらい）。30〜50文字（厳守）。
-- AI_MESSAGE … 全体を通した今日の励まし。だいたい2文。60〜80文字（厳守）。
+- TERM_ACTION … 今日の用語を使って「今日1回だけできる具体的な行動」を1文で。例：「GitHubで1ファイル編集してコミットしてみよう！」。20〜40文字（厳守）。
+- AI_ASIDE_YESTERDAY … 「昨日の学習」へのひとこと。応援より「次にやること」を1文で。30〜50文字（厳守）。
+- AI_ASIDE_UNDERSTOOD … 「理解できたこと」へのひとこと。次の行動につながる1文で。30〜50文字（厳守）。
+- AI_ASIDE_UNCLEAR … 「まだ曖昧なこと」へのひとこと。今日試せる行動を1文で。30〜50文字（厳守）。
+- AI_ASIDE_FOCUS … 「今日のフォーカス」へのひとこと。具体的な行動を1文で。30〜50文字（厳守）。
+- AI_ASIDE_TERM … 「今日の用語」へのひとこと。用語を使った行動を1文で。30〜50文字（厳守）。
+- AI_MESSAGE … 全体を通した今日の行動指示。だいたい2文。60〜80文字（厳守）。
 
 文字数は日本語の記号・句読点・絵文字も1文字として数えます。範囲を超えないよう、短く整えてください。
 JSON 以外の文字は一切出力しないでください。`;
@@ -171,6 +156,7 @@ export async function generateAiComments(fields, options = {}) {
 
   const limits = {
     TERM_DESCRIPTION: [30, 50],
+    TERM_ACTION: [20, 40],
     AI_ASIDE_YESTERDAY: [30, 50],
     AI_ASIDE_UNDERSTOOD: [30, 50],
     AI_ASIDE_UNCLEAR: [30, 50],
