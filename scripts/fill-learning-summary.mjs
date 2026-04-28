@@ -9,11 +9,9 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
 const defaultTplPath = path.join(root, 'output', 'learning-summary.template.html');
-
 export const LEARNING_SUMMARY_KEYS = [
   'DATE',
   'STREAK',
@@ -28,6 +26,7 @@ export const LEARNING_SUMMARY_KEYS = [
   'FOCUS',
   'TERM',
   'TERM_DESCRIPTION',
+  'TERM_ACTION',
   'AI_MESSAGE',
   'AI_ASIDE_YESTERDAY',
   'AI_ASIDE_UNDERSTOOD',
@@ -35,7 +34,6 @@ export const LEARNING_SUMMARY_KEYS = [
   'AI_ASIDE_FOCUS',
   'AI_ASIDE_TERM',
 ];
-
 /**
  * @param {Record<string, unknown>} data
  * @param {{ tplPath?: string, previewTitle?: boolean }} [options] previewTitle が true のときだけタイトルを「プレビュー」に差し替え
@@ -58,7 +56,6 @@ export function fillLearningSummaryHtml(data, options = {}) {
   const unclosed = rawLeft ? [...new Set(rawLeft)] : [];
   return { html: tpl, unclosed };
 }
-
 async function fillMain() {
   const jsonPath = process.argv[2];
   let raw = '';
@@ -72,7 +69,6 @@ async function fillMain() {
       process.stdin.on('error', reject);
     });
   }
-
   let data = {};
   try {
     data = JSON.parse(raw.trim() || '{}');
@@ -80,20 +76,17 @@ async function fillMain() {
     console.error('JSON の解析に失敗しました:', e.message);
     process.exit(1);
   }
-
   const outPath = process.argv[3];
   const { html: tpl, unclosed } = fillLearningSummaryHtml(data, { previewTitle: !!outPath });
   if (unclosed.length) {
     console.warn('未置換のプレースホルダ:', unclosed.join(', '));
   }
-
   if (outPath) {
     fs.writeFileSync(path.resolve(process.cwd(), outPath), tpl, 'utf8');
   } else {
     process.stdout.write(tpl);
   }
 }
-
 const isMain = process.argv[1]?.replace(/\\/g, '/').endsWith('fill-learning-summary.mjs');
 if (isMain) {
   fillMain().catch((e) => {
