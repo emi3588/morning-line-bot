@@ -81,9 +81,8 @@ export function evaluateBedtimeSignal(cell) {
 
 export function evaluateWakeupSignal(cell) {
   const m = parseClockToMinutesFromMidnight(cell);
-  if (m == null) return 'red';
-  if (m <= 4 * 60 + 59) return 'red';
-  if (m <= 5 * 60 + 59) return 'green';
+  if (m == null) return 'yellow';
+  if (m >= 5 * 60 && m <= 6 * 60) return 'green';
   return 'yellow';
 }
 
