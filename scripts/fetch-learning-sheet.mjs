@@ -1,26 +1,4 @@
 #!/usr/bin/env node
-/**
- * 学習記録スプレッドシートから「前日の日付（MM/DD）」に一致する行を取得し、
- * HTML テンプレ用のキー（{{DATE}}〜{{TERM}}）に対応するオブジェクトを返す / JSON 出力する。
- * （毎朝 7 時のジョブで「昨日の学習」を送る想定）
- *
- * 列（1行目ヘッダー、2行目以降がデータ）:
- *   A: 日付 MM/DD  B:連続 C:コース D:レッスン E:週間 F:月間 G:累計
- *   H:昨日の学習 I:理解 J:曖昧 K:今日のフォーカス L:今日の用語
- *
- * 環境変数:
- *   SHEET_ID                    スプレッドシート ID（未設定時はプレースホルダ YOUR_SHEET_ID）
- *   GOOGLE_APPLICATION_CREDENTIALS  サービスアカウント JSON のファイルパス（必須）
- *   SHEET_RANGE                 省略時 A2:L（先頭シートの 2 行目〜）
- *
- * 使い方:
- *   node scripts/fetch-learning-sheet.mjs
- *   node scripts/fetch-learning-sheet.mjs --json > data.json
- *
- * OpenAI でコメントを付与する例:
- *   node scripts/fetch-learning-sheet.mjs | node scripts/generate-ai-comments.mjs > filled.json
- */
-
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -29,7 +7,7 @@ import { google } from 'googleapis';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const SHEET_ID = process.env.SHEET_ID || 'YOUR_SHEET_ID';
-const SHEET_RANGE = process.env.SHEET_RANGE || 'A2:L';
+const SHEET_RANGE = process.env.SHEET_RANGE || 'A2:O';
 
 const COL = {
   DATE_RAW: 0,
@@ -44,20 +22,17 @@ const COL = {
   UNCLEAR: 9,
   FOCUS: 10,
   TERM: 11,
+  NEW_LESSONS: 12,
+  REVIEW_LESSONS: 13,
+  MOOD: 14,
 };
 
-/** @returns {string} MM/DD（ゼロ埋め） */
 export function toMmDdFromDate(d) {
   const m = d.getMonth() + 1;
   const day = d.getDate();
   return `${String(m).padStart(2, '0')}/${String(day).padStart(2, '0')}`;
 }
 
-/**
- * セル値を MM/DD に正規化（"4/5" → "04/05"）
- * @param {unknown} cell
- * @returns {string} MM/DD またはマッチできなければ空
- */
 export function normalizeMmdd(cell) {
   if (cell == null || cell === '') return '';
   const s = String(cell).trim();
@@ -68,10 +43,6 @@ export function normalizeMmdd(cell) {
   return '';
 }
 
-/**
- * 今日の日付を「2026年4月22日（水）」形式に（年はローカル日付の年）
- * @param {string} mmdd "MM/DD"
- */
 export function formatJapaneseDateFromMmdd(mmdd, year = new Date().getFullYear()) {
   const norm = normalizeMmdd(mmdd);
   if (!norm) return '';
@@ -82,16 +53,11 @@ export function formatJapaneseDateFromMmdd(mmdd, year = new Date().getFullYear()
   return `${year}年${mo}月${da}日（${w}）`;
 }
 
-/** @param {unknown} v */
 function cellStr(v) {
   if (v == null || v === '') return '';
   return String(v).trim();
 }
 
-/**
- * @param {string[][]} rows API の values（ヘッダー行は含まない想定）
- * @param {string} targetMmdd 検索する MM/DD（例: 前日）
- */
 export function pickRowForMmdd(rows, targetMmdd) {
   const want = normalizeMmdd(targetMmdd) || targetMmdd;
   for (let i = 0; i < rows.length; i++) {
@@ -105,11 +71,6 @@ export function pickRowForMmdd(rows, targetMmdd) {
   return null;
 }
 
-/**
- * @param {string[]} row
- * @param {string} mmdd マッチした MM/DD
- * @param {number} [year] 表示用の年（省略時は実行時の「今日」の年）
- */
 export function rowToTemplateFields(row, mmdd, year = new Date().getFullYear()) {
   const DATE = formatJapaneseDateFromMmdd(mmdd, year);
   return {
@@ -125,15 +86,16 @@ export function rowToTemplateFields(row, mmdd, year = new Date().getFullYear()) 
     UNCLEAR: cellStr(row[COL.UNCLEAR]),
     FOCUS: cellStr(row[COL.FOCUS]),
     TERM: cellStr(row[COL.TERM]),
+    NEW_LESSONS: cellStr(row[COL.NEW_LESSONS]),
+    REVIEW_LESSONS: cellStr(row[COL.REVIEW_LESSONS]),
+    MOOD: cellStr(row[COL.MOOD]),
   };
 }
 
 async function getSheetsClient() {
   const keyFile = process.env.GOOGLE_APPLICATION_CREDENTIALS;
   if (!keyFile) {
-    throw new Error(
-      '環境変数 GOOGLE_APPLICATION_CREDENTIALS に、サービスアカウント JSON のパスを設定してください。'
-    );
+    throw new Error('環境変数 GOOGLE_APPLICATION_CREDENTIALS を設定してください。');
   }
   const resolved = path.isAbsolute(keyFile) ? keyFile : path.resolve(process.cwd(), keyFile);
   if (!fs.existsSync(resolved)) {
@@ -147,7 +109,6 @@ async function getSheetsClient() {
   return google.sheets({ version: 'v4', auth: client });
 }
 
-/** JST（日本時間）で「昨日」の Date */
 function getYesterdayDate() {
   const now = new Date();
   const jst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
@@ -155,17 +116,12 @@ function getYesterdayDate() {
   return jst;
 }
 
-/**
- * スプレッドシートから前日（昨日）の MM/DD に一致する行を取得し、テンプレ用フィールドに変換する。
- */
 export async function fetchLearningFieldsForYesterday(options = {}) {
   const sheetId = options.sheetId ?? SHEET_ID;
   const range = options.range ?? SHEET_RANGE;
 
   if (!sheetId || sheetId === 'YOUR_SHEET_ID') {
-    throw new Error(
-      'SHEET_ID が未設定です。環境変数 SHEET_ID にスプレッドシート ID を設定するか、YOUR_SHEET_ID を置き換えてください。'
-    );
+    throw new Error('SHEET_ID が未設定です。');
   }
 
   const sheets = await getSheetsClient();
@@ -180,9 +136,7 @@ export async function fetchLearningFieldsForYesterday(options = {}) {
   const hit = pickRowForMmdd(rows, yesterdayMmdd);
 
   if (!hit) {
-    throw new Error(
-      `前日（${yesterdayMmdd}）に一致する行が ${range} 内に見つかりませんでした。A列の日付形式を MM/DD で確認してください。`
-    );
+    throw new Error(`前日（${yesterdayMmdd}）に一致する行が見つかりませんでした。`);
   }
 
   const fields = rowToTemplateFields(hit.row, hit.mmdd, yesterday.getFullYear());
