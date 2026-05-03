@@ -5,7 +5,7 @@
   設計: 事実 → AI（意味づけ・言語化）→ 承認＋次の一歩
   差し込み（二重波括弧の KEY）:
   DATE, STREAK, COURSES, LESSONS, WEEKLY, MONTHLY, TOTAL（KPIは数値のみ差し替え）
-  YESTERDAY, UNDERSTOOD, UNCLEAR, FOCUS, TERM, TERM_DESCRIPTION（用語の1〜2行説明・用語名の直下）
+  YESTERDAY, UNDERSTOOD, FOCUS, TERM, TERM_DESCRIPTION（用語の1〜2行説明・用語名の直下）
   AI_ASIDE_YESTERDAY … AI_ASIDE_TERM（右の薄ベージュ吹き出し。本番は左カラムを読んだAI生成文を差し込む）
   AI_MESSAGE（最下部バー・ハート横の励まし）
   -->
@@ -124,7 +124,6 @@
       justify-content: center;
     }
 
-    /* ★ 連続だけ濃いオレンジ */
     .kpi.kpi--streak {
       background: #ff6a00;
       border-color: #c94d00;
@@ -327,21 +326,11 @@
 
         <section class="sec-row">
           <div class="sec-left">
-            <h2><span aria-hidden="true">💡</span>理解できたこと</h2>
+            <h2><span aria-hidden="true">💡</span>昨日の復習</h2>
             <p>{{UNDERSTOOD}}</p>
           </div>
           <aside class="bubble" aria-label="今日やること">
             <p>{{AI_ASIDE_UNDERSTOOD}}</p>
-          </aside>
-        </section>
-
-        <section class="sec-row">
-          <div class="sec-left">
-            <h2><span aria-hidden="true">🌿</span>まだ曖昧なこと</h2>
-            <p>{{UNCLEAR}}</p>
-          </div>
-          <aside class="bubble" aria-label="今日やること">
-            <p>{{AI_ASIDE_UNCLEAR}}</p>
           </aside>
         </section>
 
@@ -357,7 +346,7 @@
 
         <section class="sec-row">
           <div class="sec-left">
-            <h2><span aria-hidden="true">✨</span>今日の用語</h2>
+            <h2><span aria-hidden="true">✨</span>昨日の用語</h2>
             <p>{{TERM}}</p>
             <p class="term-description">{{TERM_DESCRIPTION}}</p>
             <p class="term-action">▶ {{TERM_ACTION}}</p>
