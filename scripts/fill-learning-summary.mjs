@@ -1,17 +1,11 @@
 #!/usr/bin/env node
-/**
- * learning-summary.template.html の {{KEY}} を差し替える最小例（Node）。
- * 使い方:
- *   node scripts/fill-learning-summary.mjs output/data.json > out.html
- *   node scripts/fill-learning-summary.mjs < data.json   （従来どおり stdin）
- * data.json 例: { "DATE": "2026年4月17日（金）", "STREAK": "40", ... }
- */
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
 const defaultTplPath = path.join(root, 'output', 'learning-summary.template.html');
+
 export const LEARNING_SUMMARY_KEYS = [
   'DATE',
   'STREAK',
@@ -20,25 +14,12 @@ export const LEARNING_SUMMARY_KEYS = [
   'WEEKLY',
   'MONTHLY',
   'TOTAL',
-  'YESTERDAY',
-  'UNDERSTOOD',
-  'UNCLEAR',
-  'FOCUS',
-  'TERM',
-  'TERM_DESCRIPTION',
-  'TERM_ACTION',
+  'NEW_LESSONS',
+  'REVIEW_LESSONS',
+  'MOOD',
   'AI_MESSAGE',
-  'AI_ASIDE_YESTERDAY',
-  'AI_ASIDE_UNDERSTOOD',
-  'AI_ASIDE_UNCLEAR',
-  'AI_ASIDE_FOCUS',
-  'AI_ASIDE_TERM',
 ];
-/**
- * @param {Record<string, unknown>} data
- * @param {{ tplPath?: string, previewTitle?: boolean }} [options] previewTitle が true のときだけタイトルを「プレビュー」に差し替え
- * @returns {{ html: string, unclosed: string[] }}
- */
+
 export function fillLearningSummaryHtml(data, options = {}) {
   const tplPath = options.tplPath ?? defaultTplPath;
   let tpl = fs.readFileSync(tplPath, 'utf8');
@@ -56,6 +37,7 @@ export function fillLearningSummaryHtml(data, options = {}) {
   const unclosed = rawLeft ? [...new Set(rawLeft)] : [];
   return { html: tpl, unclosed };
 }
+
 async function fillMain() {
   const jsonPath = process.argv[2];
   let raw = '';
@@ -87,6 +69,7 @@ async function fillMain() {
     process.stdout.write(tpl);
   }
 }
+
 const isMain = process.argv[1]?.replace(/\\/g, '/').endsWith('fill-learning-summary.mjs');
 if (isMain) {
   fillMain().catch((e) => {
