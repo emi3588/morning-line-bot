@@ -38,7 +38,10 @@ function buildUserPayload(fields) {
     累計: fields.TOTAL ?? '',
     新規: fields.NEW_LESSONS ?? '',
     復習: fields.REVIEW_LESSONS ?? '',
-    気分: fields.MOOD ?? '',
+    復習項目: fields.REVIEW_TEXT ?? '',
+    Git: fields.GIT ?? '',
+    Web: fields.WEB ?? '',
+    UI: fields.UI ?? '',
   };
 }
 
