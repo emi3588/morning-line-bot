@@ -33,7 +33,6 @@
       max-width: 390px;
       margin: 0 auto;
       width: 100%;
-      min-height: calc(100dvh - 24px);
       display: flex;
       flex-direction: column;
       background: var(--card);
@@ -64,7 +63,6 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      min-height: 0;
     }
     .date-line {
       padding: 12px 12px 10px;
@@ -81,47 +79,39 @@
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 5px;
-      padding: 0 8px 8px;
+      gap: 6px;
+      padding: 0 8px 10px;
     }
     .kpi {
-      border: 1px solid rgba(251, 146, 60, 0.85);
+      background: #ff6a00;
+      border-color: #c94d00;
+      border-width: 2px;
+      border-style: solid;
       border-radius: 10px;
-      background: #fff;
-      padding: 14px 4px 12px;
+      padding: 18px 4px 15px;
       text-align: center;
       min-width: 0;
-      min-height: 80px;
+      min-height: 100px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
     }
-    .kpi.kpi--streak {
-      background: #ff6a00;
-      border-color: #c94d00;
-    }
-    .kpi.kpi--streak .num { color: #fff; }
-    .kpi.kpi--streak .unit {
-      color: #fff;
-      font-size: clamp(1.2rem, 7vw, 1.6rem);
-      margin-top: 4px;
-    }
     .kpi .num {
       display: block;
-      font-size: clamp(1.42rem, 8.5vw, 1.95rem);
+      font-size: clamp(1.7rem, 10vw, 2.3rem);
       font-weight: 900;
-      color: var(--orange);
+      color: #fff;
       line-height: 1.05;
       font-variant-numeric: tabular-nums;
       letter-spacing: -0.02em;
     }
     .kpi .unit {
       display: block;
-      margin-top: 4px;
-      font-size: clamp(0.7rem, 3.5vw, 0.9rem);
+      margin-top: 6px;
+      font-size: clamp(0.8rem, 4vw, 1rem);
       font-weight: 800;
-      color: var(--orange-text);
+      color: #fff;
       line-height: 1.2;
     }
     .rule {
@@ -173,7 +163,7 @@
         <span class="val">{{DATE}}</span>
       </div>
       <div class="kpi-grid">
-        <div class="kpi kpi--streak">
+        <div class="kpi">
           <span class="num">{{STREAK}}</span>
           <span class="unit">連続🔥</span>
         </div>
