@@ -5,7 +5,6 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
 const defaultTplPath = path.join(root, 'output', 'learning-summary.template.html');
-
 export const LEARNING_SUMMARY_KEYS = [
   'DATE',
   'STREAK',
@@ -16,10 +15,12 @@ export const LEARNING_SUMMARY_KEYS = [
   'TOTAL',
   'NEW_LESSONS',
   'REVIEW_LESSONS',
-  'MOOD',
+  'REVIEW_TEXT',
+  'GIT',
+  'WEB',
+  'UI',
   'AI_MESSAGE',
 ];
-
 export function fillLearningSummaryHtml(data, options = {}) {
   const tplPath = options.tplPath ?? defaultTplPath;
   let tpl = fs.readFileSync(tplPath, 'utf8');
@@ -37,7 +38,6 @@ export function fillLearningSummaryHtml(data, options = {}) {
   const unclosed = rawLeft ? [...new Set(rawLeft)] : [];
   return { html: tpl, unclosed };
 }
-
 async function fillMain() {
   const jsonPath = process.argv[2];
   let raw = '';
@@ -69,7 +69,6 @@ async function fillMain() {
     process.stdout.write(tpl);
   }
 }
-
 const isMain = process.argv[1]?.replace(/\\/g, '/').endsWith('fill-learning-summary.mjs');
 if (isMain) {
   fillMain().catch((e) => {
