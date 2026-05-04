@@ -41,3 +41,10 @@ const HEADER_VAGUE = 'まだ曖昧なこと';
 const FOCUS_COLUMN_HEADERS_ = ['今日のフォーカス', '今日やる１つ', '今日やる1つ'];
 
 const HEADER_TERM = '今日の用語';
+
+const HEADER_NEW = '新規';
+const HEADER_REVIEW_NUM = '復習';
+const HEADER_REVIEW_TEXT = '復習';
+const HEADER_GIT = 'Git';
+const HEADER_WEB = 'Web';
+const HEADER_UI = 'UI';
