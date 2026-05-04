@@ -116,7 +116,7 @@ function buildLearningReportFlexBubble_(row) {
     type: 'box',
     layout: 'horizontal',
     spacing: 'sm',
-    margin: 'md',
+    margin: 'sm',
     contents: [
       flexStatCell_(streak, '連続', true),
       flexStatCell_(courses, 'コース', false),
@@ -128,7 +128,7 @@ function buildLearningReportFlexBubble_(row) {
     type: 'box',
     layout: 'horizontal',
     spacing: 'sm',
-    margin: 'sm',
+    margin: 'xs',
     contents: [
       flexStatCell_(week, '週間', false),
       flexStatCell_(month, '月間', false),
@@ -140,11 +140,11 @@ function buildLearningReportFlexBubble_(row) {
     type: 'box',
     layout: 'horizontal',
     spacing: 'sm',
-    margin: 'sm',
+    margin: 'xs',
     contents: [
       flexStatCell_(newNum, '新規', false),
       flexStatCell_(reviewNum, '復習', false),
-      flexStatCell_(reviewText, '復習', false)
+      flexStatCell_(reviewText, '復習項目', false)
     ]
   });
 
@@ -152,7 +152,7 @@ function buildLearningReportFlexBubble_(row) {
     type: 'box',
     layout: 'horizontal',
     spacing: 'sm',
-    margin: 'sm',
+    margin: 'xs',
     contents: [
       flexMarkCell_(gitMark, 'Git'),
       flexMarkCell_(webMark, 'Web'),
