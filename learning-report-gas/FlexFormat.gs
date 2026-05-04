@@ -47,28 +47,37 @@ function flexStatCell_(num, label, highlight) {
   };
 }
 
-function flexSectionBlock_(emoji, title, body) {
+/** ◯✕ラベル付きセル */
+function flexMarkCell_(mark, label) {
+  var displayMark = (mark === '◯' || mark === 'O' || mark === 'o' || mark === '○') ? '◯' : '✕';
+  var markColor = (displayMark === '◯') ? '#22c55e' : '#ef4444';
   return {
     type: 'box',
     layout: 'vertical',
-    margin: 'lg',
-    spacing: 'xs',
+    flex: 1,
+    backgroundColor: colors.background,
+    cornerRadius: '10px',
+    borderColor: colors.header,
+    borderWidth: '1px',
+    paddingAll: '8px',
     contents: [
       {
         type: 'text',
-        text: emoji + ' ' + title,
+        text: displayMark,
+        align: 'center',
         weight: 'bold',
-        size: 'sm',
-        color: colors.accent,
-        wrap: true
+        size: 'xl',
+        color: markColor,
+        wrap: false
       },
       {
         type: 'text',
-        text: body,
-        size: 'sm',
-        color: colors.accent,
-        wrap: true,
-        margin: 'sm'
+        text: label,
+        align: 'center',
+        size: 'xxs',
+        color: colors.header,
+        margin: 'sm',
+        wrap: false
       }
     ]
   };
@@ -84,6 +93,12 @@ function buildLearningReportFlexBubble_(row) {
   const week = cellDisplay_(row, HEADER_WEEK);
   const month = cellDisplay_(row, HEADER_MONTH);
   const total = cellDisplay_(row, HEADER_TOTAL);
+  const newNum = cellDisplay_(row, HEADER_NEW);
+  const reviewNum = cellDisplay_(row, HEADER_REVIEW_NUM);
+  const reviewText = cellDisplay_(row, HEADER_REVIEW_TEXT);
+  const gitMark = cellDisplay_(row, HEADER_GIT);
+  const webMark = cellDisplay_(row, HEADER_WEB);
+  const uiMark = cellDisplay_(row, HEADER_UI);
   const datePretty = getRecordDatePretty_(row) || '—';
 
   const bodyContents = [];
@@ -121,13 +136,29 @@ function buildLearningReportFlexBubble_(row) {
     ]
   });
 
-  bodyContents.push({ type: 'separator', margin: 'lg', color: colors.header });
+  bodyContents.push({
+    type: 'box',
+    layout: 'horizontal',
+    spacing: 'sm',
+    margin: 'sm',
+    contents: [
+      flexStatCell_(newNum, '新規', false),
+      flexStatCell_(reviewNum, '復習', false),
+      flexStatCell_(reviewText, '復習', false)
+    ]
+  });
 
-  bodyContents.push(flexSectionBlock_('📘', '昨日の学習', cellDisplay_(row, HEADER_YESTERDAY)));
-  bodyContents.push(flexSectionBlock_('💡', '理解できたこと', cellDisplay_(row, HEADER_UNDERSTOOD)));
-  bodyContents.push(flexSectionBlock_('🌿', 'まだ曖昧なこと', cellDisplay_(row, HEADER_VAGUE)));
-  bodyContents.push(flexSectionBlock_('🎯', '今日のフォーカス', cellDisplayFirst_(row, FOCUS_COLUMN_HEADERS_)));
-  bodyContents.push(flexSectionBlock_('✨', '今日の用語', cellDisplay_(row, HEADER_TERM)));
+  bodyContents.push({
+    type: 'box',
+    layout: 'horizontal',
+    spacing: 'sm',
+    margin: 'sm',
+    contents: [
+      flexMarkCell_(gitMark, 'Git'),
+      flexMarkCell_(webMark, 'Web'),
+      flexMarkCell_(uiMark, 'UI')
+    ]
+  });
 
   return {
     type: 'bubble',
