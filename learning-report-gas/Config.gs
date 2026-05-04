@@ -44,7 +44,7 @@ const HEADER_TERM = '今日の用語';
 
 const HEADER_NEW = '新規';
 const HEADER_REVIEW_NUM = '復習';
-const HEADER_REVIEW_TEXT = '復習';
+const HEADER_REVIEW_TEXT = '復習項目';
 const HEADER_GIT = 'Git';
 const HEADER_WEB = 'Web';
 const HEADER_UI = 'UI';
