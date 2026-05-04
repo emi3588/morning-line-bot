@@ -7,7 +7,7 @@ import { google } from 'googleapis';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const SHEET_ID = process.env.SHEET_ID || 'YOUR_SHEET_ID';
-const SHEET_RANGE = process.env.SHEET_RANGE || 'A2:O';
+const SHEET_RANGE = process.env.SHEET_RANGE || 'A2:S';
 
 const COL = {
   DATE_RAW: 0,
@@ -24,7 +24,10 @@ const COL = {
   TERM: 11,
   NEW_LESSONS: 12,
   REVIEW_LESSONS: 13,
-  MOOD: 14,
+  REVIEW_TEXT: 14,
+  GIT: 15,
+  WEB: 16,
+  UI: 17,
 };
 
 export function toMmDdFromDate(d) {
@@ -88,7 +91,10 @@ export function rowToTemplateFields(row, mmdd, year = new Date().getFullYear()) 
     TERM: cellStr(row[COL.TERM]),
     NEW_LESSONS: cellStr(row[COL.NEW_LESSONS]),
     REVIEW_LESSONS: cellStr(row[COL.REVIEW_LESSONS]),
-    MOOD: cellStr(row[COL.MOOD]),
+    REVIEW_TEXT: cellStr(row[COL.REVIEW_TEXT]),
+    GIT: cellStr(row[COL.GIT]),
+    WEB: cellStr(row[COL.WEB]),
+    UI: cellStr(row[COL.UI]),
   };
 }
 
