@@ -124,14 +124,6 @@
       color: var(--orange-text);
       line-height: 1.2;
     }
-    .kpi .mark {
-      display: block;
-      font-size: clamp(1.4rem, 8vw, 1.9rem);
-      font-weight: 900;
-      line-height: 1.05;
-    }
-    .kpi .mark--ok { color: #22c55e; }
-    .kpi .mark--ng { color: #ef4444; }
     .rule {
       height: 1px;
       margin: 0 10px 8px;
@@ -218,15 +210,15 @@
           <span class="unit">復習項目</span>
         </div>
         <div class="kpi">
-          <span class="mark {{GIT_CLASS}}">{{GIT}}</span>
+          <span class="num">{{GIT}}</span>
           <span class="unit">Git</span>
         </div>
         <div class="kpi">
-          <span class="mark {{WEB_CLASS}}">{{WEB}}</span>
+          <span class="num">{{WEB}}</span>
           <span class="unit">Web</span>
         </div>
         <div class="kpi">
-          <span class="mark {{UI_CLASS}}">{{UI}</span>
+          <span class="num">{{UI}}</span>
           <span class="unit">UI</span>
         </div>
       </div>
