@@ -16,6 +16,14 @@ export function parseJapaneseDurationToMinutes(cell) {
   if (typeof cell === 'number' && !Number.isNaN(cell)) return Math.round(cell * 60);
   const s = String(cell).trim().replace(/\s+/g, '');
   if (!s) return null;
+  // 6:27 形式
+  const clock = s.match(/^(\d{1,2}):(\d{2})$/);
+  if (clock) {
+    const h = parseInt(clock[1], 10);
+    const m = parseInt(clock[2], 10);
+    if (!Number.isNaN(h) && !Number.isNaN(m)) return h * 60 + m;
+  }
+  // 6時間27分 形式
   const re = /^(\d+(?:\.\d+)?)時間(?:(\d+)分)?$/;
   const m = s.match(re);
   if (!m) return null;
