@@ -82,7 +82,11 @@ export function evaluateStepsSignal(cell) {
 export function evaluateBedtimeSignal(cell) {
   const m = parseClockToMinutesFromMidnight(cell);
   if (m == null) return 'red';
+  // 深夜0時〜4時は赤（例: 0:30 = 30分）
+  if (m < 4 * 60) return 'red';
+  // 22:00以前（1320分以下）は緑
   if (m <= 22 * 60) return 'green';
+  // 23:00以前（1380分以下）は黄
   if (m <= 23 * 60) return 'yellow';
   return 'red';
 }
