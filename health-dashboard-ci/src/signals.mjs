@@ -141,7 +141,7 @@ export function worstSignalOverall(signals) {
 
 export const SIGNAL_ITEM_LABELS = {
   sleepScore: '睡眠スコア',
-  sleepHours: '睡眠時間',
+  sleepHours: '実睡眠時間',
   steps: '歩数',
   bedtime: '就寝',
   wakeup: '起床',
