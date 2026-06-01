@@ -47,7 +47,7 @@ jobs:
       - name: Prepare GitHub Pages
         run: |
           mkdir -p gh-pages-root
-          cp health-dashboard-ci/dist/dashboard.png gh-pages-root/dashboard.png
+          cp health-dashboard-ci/dist/dashboard.png gh-pages-root/health-dashboard.png
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -82,5 +82,5 @@ jobs:
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN_HEALTH }}
           LINE_TO_ID: ${{ secrets.LINE_TO_ID_HEALTH }}
-          LINE_DASHBOARD_IMAGE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/dashboard.png?v=${{ github.run_id }}&attempt=${{ github.run_attempt }}
+          LINE_DASHBOARD_IMAGE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/health-dashboard.png?v=${{ github.run_id }}&attempt=${{ github.run_attempt }}
         run: npm run push:line-image
