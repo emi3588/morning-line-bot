@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { linePushDashboardFlex } from './line.mjs';
+import { linePushDashboardImageUrls } from './line.mjs';
 
 const url = process.env.LINE_DASHBOARD_IMAGE_URL;
 if (!url || !String(url).trim()) {
@@ -7,5 +7,5 @@ if (!url || !String(url).trim()) {
   process.exit(1);
 }
 
-await linePushDashboardFlex(String(url).trim());
-console.log('LINE Flex push 完了:', url);
+await linePushDashboardImageUrls(String(url).trim());
+console.log('LINE image push 完了:', url);
