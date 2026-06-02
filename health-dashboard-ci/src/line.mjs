@@ -199,7 +199,7 @@ export async function linePushDashboardFlex(imageUrl) {
             url: imageUrl,
             size: 'full',
             aspectMode: 'fit',
-            aspectRatio: '20:13'
+            aspectRatio: '1:1.8'
           }
         ]
       }
