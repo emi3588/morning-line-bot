@@ -178,8 +178,8 @@ export async function linePushDashboardText(text) {
  * @param {string} imageUrl HTTPS の PNG/JPEG
  */
 export async function linePushDashboardFlex(imageUrl) {
-  const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
-  const to = process.env.LINE_TO_ID;
+const token = process.env.LINE_CHANNEL_ACCESS_TOKEN_HEALTH;
+  const to = process.env.LINE_TO_ID_HEALTH;
   if (!token || !to) {
     throw new Error('LINE_CHANNEL_ACCESS_TOKEN と LINE_TO_ID を設定してください');
   }
