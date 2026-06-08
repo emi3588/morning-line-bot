@@ -28,8 +28,8 @@ export function saveDashboardPngLocal(filePath, pngBuffer) {
  * @param {string} [previewUrl] 未指定時は imageUrl と同じ
  */
 export async function linePushDashboardImageUrls(imageUrl, previewUrl = imageUrl) {
-  const token = process.env.LINE_CHANNEL_ACCESS_TOKEN_HEALTH;
-const to = process.env.LINE_TO_ID_HEALTH;
+const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+const to = process.env.LINE_TO_ID;
   if (!token || !to) {
     throw new Error('LINE_CHANNEL_ACCESS_TOKEN と LINE_TO_ID を設定してください');
   }
