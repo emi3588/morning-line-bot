@@ -28,8 +28,8 @@ export function saveDashboardPngLocal(filePath, pngBuffer) {
  * @param {string} [previewUrl] 未指定時は imageUrl と同じ
  */
 export async function linePushDashboardImageUrls(imageUrl, previewUrl = imageUrl) {
-const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
-const to = process.env.LINE_TO_ID;
+  const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  const to = process.env.LINE_TO_ID;
   if (!token || !to) {
     throw new Error('LINE_CHANNEL_ACCESS_TOKEN と LINE_TO_ID を設定してください');
   }
@@ -37,26 +37,39 @@ const to = process.env.LINE_TO_ID;
     throw new Error('LINE の画像 URL は https:// で始まる必要があります');
   }
   const preview = previewUrl || imageUrl;
-  const res = await fetch('https://api.line.me/v2/bot/message/push', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({
-      to,
-      messages: [
-        {
-          type: 'image',
-          originalContentUrl: imageUrl,
-          previewImageUrl: preview
-        }
-      ]
-    })
-  });
+  // 送信前ログ: トークン・宛先の中身は出さず、設定有無と長さだけ
+  const tokenInfo = token ? `設定あり(長さ${token.length})` : '未設定';
+  const toInfo = to ? `設定あり(長さ${to.length})` : '未設定';
+  console.log(`[LINE] 送信前: 種類=image / LINE_CHANNEL_ACCESS_TOKEN=${tokenInfo} / LINE_TO_ID=${toInfo}`);
+  console.log(`[LINE] originalContentUrl=${imageUrl}`);
+  let res;
+  try {
+    res = await fetch('https://api.line.me/v2/bot/message/push', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        to,
+        messages: [
+          {
+            type: 'image',
+            originalContentUrl: imageUrl,
+            previewImageUrl: preview
+          }
+        ]
+      })
+    });
+  } catch (err) {
+    console.error(`[LINE] 送信エラー（ネットワーク/例外）: ${err && err.message ? err.message : err}`);
+    throw err;
+  }
+  const bodyText = await res.text();
+  console.log(`[LINE] 送信後: status=${res.status} ok=${res.ok} body=${bodyText}`);
   if (!res.ok) {
-    const t = await res.text();
-    throw new Error(`LINE push 失敗: ${res.status} ${t}`);
+    console.error(`[LINE] 送信失敗: status=${res.status} body=${bodyText}`);
+    throw new Error(`LINE push 失敗: ${res.status} ${bodyText}`);
   }
 }
 

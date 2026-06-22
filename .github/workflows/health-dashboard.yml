@@ -48,6 +48,15 @@ jobs:
         run: |
           mkdir -p gh-pages-root
           cp health-dashboard-ci/dist/dashboard.png gh-pages-root/health-dashboard.png
+          # 学習レポートの画像が公開済みなら、消さずに引き継ぐ（GitHub Pages 上書き対策）
+          PAGES="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          if curl -fsSL "$PAGES/learning-report.png" -o gh-pages-root/learning-report.png; then
+            echo "kept learning-report.png"
+          else
+            rm -f gh-pages-root/learning-report.png
+            echo "skip learning-report.png (not found yet)"
+          fi
+          ls -la gh-pages-root
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
