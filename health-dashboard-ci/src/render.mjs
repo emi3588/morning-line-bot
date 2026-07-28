@@ -75,13 +75,8 @@ export function buildGridCardsHtml(row, signals) {
   const cards = [
     buildCard('睡眠スコア', 'sleepScore', 'sleepScore', signals, row, ''),
     buildCard('睡眠時間', 'sleepDuration', 'sleepHours', signals, row, ''),
-    buildCard('歩数', 'steps', 'steps', signals, row, '歩'),
     buildCard('就寝', 'bedtime', 'bedtime', signals, row, ''),
-    buildCard('起床', 'wakeup', 'wakeup', signals, row, ''),
-    buildCard('気分', 'mood', 'mood', signals, row, ''),
-    buildCard('便通', 'bowel', 'bowel', signals, row, ''),
-    buildCard('朝散歩', 'walk', 'walk', signals, row, ''),
-    buildCard('ルームマシン', 'roomMachine', 'roomMachine', signals, row, '')
+  
   ];
   return `\n${cards.join('\n')}\n`;
 }
